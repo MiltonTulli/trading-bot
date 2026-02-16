@@ -165,23 +165,23 @@ export function TradesTable() {
                   </td>
                   <td className="py-3 px-2 font-medium">{trade.symbol}</td>
                   <td className="py-3 px-2 text-right font-mono text-sm">
-                    ${trade.entryPrice.toLocaleString()}
+                    ${Number(trade.entryPrice || 0).toLocaleString()}
                   </td>
                   <td className="py-3 px-2 text-right font-mono text-sm">
-                    ${trade.exitPrice.toLocaleString()}
+                    ${Number(trade.exitPrice || 0).toLocaleString()}
                   </td>
                   <td className={`py-3 px-2 text-right font-mono text-sm font-medium ${
-                    trade.netPnL >= 0 ? 'text-success' : 'text-destructive'
+                    Number(trade.netPnL || 0) >= 0 ? 'text-success' : 'text-destructive'
                   }`}>
-                    {trade.netPnL >= 0 ? '+' : ''}${trade.netPnL.toFixed(2)}
+                    {Number(trade.netPnL || 0) >= 0 ? '+' : ''}${Number(trade.netPnL || 0).toFixed(2)}
                   </td>
                   <td className={`py-3 px-2 text-right font-mono text-sm font-medium ${
-                    trade.returnPercent >= 0 ? 'text-success' : 'text-destructive'
+                    Number(trade.returnPercent || 0) >= 0 ? 'text-success' : 'text-destructive'
                   }`}>
-                    {trade.returnPercent >= 0 ? '+' : ''}{trade.returnPercent.toFixed(2)}%
+                    {Number(trade.returnPercent || 0) >= 0 ? '+' : ''}{Number(trade.returnPercent || 0).toFixed(2)}%
                   </td>
                   <td className="py-3 px-2 text-right font-mono text-sm">
-                    {trade.duration ? `${trade.duration.toFixed(1)}h` : 'N/A'}
+                    {trade.duration ? `${Number(trade.duration || 0).toFixed(1)}h` : 'N/A'}
                   </td>
                   <td className="py-3 px-2 text-right text-sm text-muted-foreground">
                     {new Date(trade.exitTime).toLocaleDateString()}
@@ -205,37 +205,42 @@ export function TradesTable() {
             <div>
               <div className="text-muted-foreground mb-1">Total P&L</div>
               <div className={`font-mono font-medium ${
-                sortedAndFilteredTrades.reduce((sum, t) => sum + t.netPnL, 0) >= 0 ? 'text-success' : 'text-destructive'
+                sortedAndFilteredTrades.reduce((sum, t) => sum + Number(t.netPnL || 0), 0) >= 0 ? 'text-success' : 'text-destructive'
               }`}>
-                ${sortedAndFilteredTrades.reduce((sum, t) => sum + t.netPnL, 0).toFixed(2)}
+                ${sortedAndFilteredTrades.reduce((sum, t) => sum + Number(t.netPnL || 0), 0).toFixed(2)}
               </div>
             </div>
             <div>
               <div className="text-muted-foreground mb-1">Win Rate</div>
               <div className="font-mono font-medium">
-                {((sortedAndFilteredTrades.filter(t => t.netPnL > 0).length / sortedAndFilteredTrades.length) * 100).toFixed(1)}%
+                {sortedAndFilteredTrades.length > 0 
+                  ? ((sortedAndFilteredTrades.filter(t => Number(t.netPnL || 0) > 0).length / sortedAndFilteredTrades.length) * 100).toFixed(1)
+                  : '0.0'
+                }%
               </div>
             </div>
             <div>
               <div className="text-muted-foreground mb-1">Avg Win</div>
               <div className="font-mono font-medium text-success">
                 $
-                {(sortedAndFilteredTrades
-                  .filter(t => t.netPnL > 0)
-                  .reduce((sum, t) => sum + t.netPnL, 0) / 
-                  Math.max(sortedAndFilteredTrades.filter(t => t.netPnL > 0).length, 1)
-                ).toFixed(2)}
+                {(() => {
+                  const wins = sortedAndFilteredTrades.filter(t => Number(t.netPnL || 0) > 0)
+                  return wins.length > 0 
+                    ? (wins.reduce((sum, t) => sum + Number(t.netPnL || 0), 0) / wins.length).toFixed(2)
+                    : '0.00'
+                })()}
               </div>
             </div>
             <div>
               <div className="text-muted-foreground mb-1">Avg Loss</div>
               <div className="font-mono font-medium text-destructive">
                 $
-                {(sortedAndFilteredTrades
-                  .filter(t => t.netPnL < 0)
-                  .reduce((sum, t) => sum + t.netPnL, 0) / 
-                  Math.max(sortedAndFilteredTrades.filter(t => t.netPnL < 0).length, 1)
-                ).toFixed(2)}
+                {(() => {
+                  const losses = sortedAndFilteredTrades.filter(t => Number(t.netPnL || 0) < 0)
+                  return losses.length > 0 
+                    ? (losses.reduce((sum, t) => sum + Number(t.netPnL || 0), 0) / losses.length).toFixed(2)
+                    : '0.00'
+                })()}
               </div>
             </div>
           </div>

@@ -43,10 +43,10 @@ export function EquityCurve() {
     drawdown: Math.abs(point.drawdown), // Make positive for display
   }))
 
-  const currentEquity = equityData[equityData.length - 1]?.equity || 0
-  const initialEquity = equityData[0]?.equity || 10000
-  const totalReturn = ((currentEquity - initialEquity) / initialEquity) * 100
-  const maxDrawdown = Math.max(...equityData.map(p => Math.abs(p.drawdown)))
+  const currentEquity = Number(equityData[equityData.length - 1]?.equity || 0)
+  const initialEquity = Number(equityData[0]?.equity || 10000)
+  const totalReturn = initialEquity > 0 ? ((currentEquity - initialEquity) / initialEquity) * 100 : 0
+  const maxDrawdown = equityData.length > 0 ? Math.max(...equityData.map(p => Math.abs(Number(p.drawdown || 0)))) : 0
 
   return (
     <div className="card">
@@ -58,10 +58,10 @@ export function EquityCurve() {
           </h3>
           <div className="text-right text-sm">
             <div className={`font-mono ${totalReturn >= 0 ? 'text-success' : 'text-destructive'}`}>
-              {totalReturn >= 0 ? '+' : ''}{totalReturn.toFixed(2)}%
+              {totalReturn >= 0 ? '+' : ''}{(totalReturn || 0).toFixed(2)}%
             </div>
             <div className="text-muted-foreground">
-              Max DD: -{maxDrawdown.toFixed(2)}%
+              Max DD: -{(maxDrawdown || 0).toFixed(2)}%
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@ export function EquityCurve() {
                 }}
                 labelStyle={{ color: '#a1a1aa' }}
                 formatter={(value: any, name: string) => [
-                  name === 'equity' ? `$${value.toLocaleString()}` : `${value.toFixed(2)}%`,
+                  name === 'equity' ? `$${Number(value || 0).toLocaleString()}` : `${Number(value || 0).toFixed(2)}%`,
                   name === 'equity' ? 'Equity' : 'Drawdown'
                 ]}
               />
@@ -123,11 +123,11 @@ export function EquityCurve() {
         <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/20 text-sm">
           <div>
             <div className="text-muted-foreground">Current Equity</div>
-            <div className="font-mono font-medium">${currentEquity.toLocaleString()}</div>
+            <div className="font-mono font-medium">${(currentEquity || 0).toLocaleString()}</div>
           </div>
           <div>
             <div className="text-muted-foreground">Initial Balance</div>
-            <div className="font-mono font-medium">${initialEquity.toLocaleString()}</div>
+            <div className="font-mono font-medium">${(initialEquity || 0).toLocaleString()}</div>
           </div>
         </div>
       </div>

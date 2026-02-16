@@ -70,13 +70,13 @@ export function MonthlyHeatmap() {
     return 'bg-muted/40 text-muted-foreground' // For zero returns
   }
 
-  const totalReturns = displayData.reduce((sum, item) => sum + item.return, 0)
+  const totalReturns = displayData.reduce((sum, item) => sum + Number(item.return || 0), 0)
   const averageReturn = displayData.length > 0 ? totalReturns / displayData.length : 0
   const bestMonth = displayData.reduce((best, item) => 
-    item.return > best.return ? item : best, displayData[0] || { return: 0 }
+    Number(item.return || 0) > Number(best.return || 0) ? item : best, displayData[0] || { return: 0 }
   )
   const worstMonth = displayData.reduce((worst, item) => 
-    item.return < worst.return ? item : worst, displayData[0] || { return: 0 }
+    Number(item.return || 0) < Number(worst.return || 0) ? item : worst, displayData[0] || { return: 0 }
   )
 
   return (
@@ -103,12 +103,12 @@ export function MonthlyHeatmap() {
                         transition-all hover:scale-110 hover:z-10
                         ${getColor(returnValue)}
                       `}
-                      title={`${month} ${year}: ${returnValue ? `${returnValue > 0 ? '+' : ''}${returnValue.toFixed(2)}%` : 'N/A'}`}
+                      title={`${month} ${year}: ${returnValue !== undefined && returnValue !== null ? `${returnValue > 0 ? '+' : ''}${Number(returnValue).toFixed(2)}%` : 'N/A'}`}
                     >
                       <div className="text-xs">{month.slice(0, 1)}</div>
-                      {returnValue !== undefined && (
+                      {returnValue !== undefined && returnValue !== null && (
                         <div className="text-[10px] leading-none mt-0.5">
-                          {returnValue > 0 ? '+' : ''}{returnValue.toFixed(1)}
+                          {returnValue > 0 ? '+' : ''}{Number(returnValue).toFixed(1)}
                         </div>
                       )}
                     </div>
@@ -130,13 +130,13 @@ export function MonthlyHeatmap() {
           <div>
             <div className="text-muted-foreground mb-1">Best Month</div>
             <div className="font-mono font-medium text-success">
-              +{bestMonth?.return?.toFixed(2) || '0.00'}%
+              +{Number(bestMonth?.return || 0).toFixed(2)}%
             </div>
           </div>
           <div>
             <div className="text-muted-foreground mb-1">Worst Month</div>
             <div className="font-mono font-medium text-destructive">
-              {worstMonth?.return?.toFixed(2) || '0.00'}%
+              {Number(worstMonth?.return || 0).toFixed(2)}%
             </div>
           </div>
         </div>

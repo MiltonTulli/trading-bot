@@ -18,24 +18,24 @@ export function StatsCards() {
     )
   }
 
-  const totalPnL = stats?.totalPnL ?? 0
-  const totalPnLPercent = stats?.totalPnLPercent ?? 0
-  const winRate = stats?.winRate ?? 0
-  const currentMonthReturn = stats?.currentMonthReturn ?? 0
-  const sharpeRatio = stats?.sharpeRatio ?? 0
-  const maxDrawdown = stats?.maxDrawdown ?? 0
+  const totalPnL = Number(stats?.totalPnL || 0)
+  const totalPnLPercent = Number(stats?.totalPnLPercent || 0)
+  const winRate = Number(stats?.winRate || 0)
+  const currentMonthReturn = Number(stats?.currentMonthReturn || 0)
+  const sharpeRatio = Number(stats?.sharpeRatio || 0)
+  const maxDrawdown = Number(stats?.maxDrawdown || 0)
 
   const cards = [
     {
       title: 'Total P&L',
-      value: `$${totalPnL.toLocaleString()}`,
-      subtitle: `${totalPnLPercent >= 0 ? '+' : ''}${totalPnLPercent.toFixed(2)}%`,
+      value: `$${(totalPnL || 0).toLocaleString()}`,
+      subtitle: `${totalPnLPercent >= 0 ? '+' : ''}${(totalPnLPercent || 0).toFixed(2)}%`,
       icon: totalPnL >= 0 ? TrendingUp : TrendingDown,
       color: totalPnL >= 0 ? 'text-success' : 'text-destructive'
     },
     {
       title: 'Win Rate',
-      value: `${winRate.toFixed(1)}%`,
+      value: `${(winRate || 0).toFixed(1)}%`,
       subtitle: `${stats?.winningTrades || 0}/${stats?.totalTrades || 0} trades`,
       icon: Target,
       color: winRate >= 50 ? 'text-success' : 'text-destructive'
@@ -49,21 +49,21 @@ export function StatsCards() {
     },
     {
       title: 'Monthly Return',
-      value: `${currentMonthReturn >= 0 ? '+' : ''}${currentMonthReturn.toFixed(2)}%`,
+      value: `${currentMonthReturn >= 0 ? '+' : ''}${(currentMonthReturn || 0).toFixed(2)}%`,
       subtitle: 'This month',
       icon: Calendar,
       color: currentMonthReturn >= 0 ? 'text-success' : 'text-destructive'
     },
     {
       title: 'Sharpe Ratio',
-      value: sharpeRatio.toFixed(2),
+      value: (sharpeRatio || 0).toFixed(2),
       subtitle: 'Risk-adjusted return',
       icon: TrendingUp,
       color: sharpeRatio >= 1 ? 'text-success' : sharpeRatio >= 0.5 ? 'text-yellow-500' : 'text-destructive'
     },
     {
       title: 'Max Drawdown',
-      value: `-${maxDrawdown.toFixed(2)}%`,
+      value: `-${(maxDrawdown || 0).toFixed(2)}%`,
       subtitle: 'Peak to trough',
       icon: AlertTriangle,
       color: 'text-destructive'

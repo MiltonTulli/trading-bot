@@ -109,7 +109,7 @@ export function BacktestPanel() {
                       fontSize: '12px'
                     }}
                     labelStyle={{ color: '#a1a1aa', fontSize: '11px' }}
-                    formatter={(value: any) => [`$${value.toLocaleString()}`, 'Equity']}
+                    formatter={(value: any) => [`$${Number(value || 0).toLocaleString()}`, 'Equity']}
                   />
                   <Line
                     type="monotone"
@@ -127,45 +127,45 @@ export function BacktestPanel() {
               <div>
                 <div className="text-muted-foreground">Total Return</div>
                 <div className={`font-mono font-medium ${
-                  backtestResult.stats.totalPnLPercent >= 0 ? 'text-success' : 'text-destructive'
+                  Number(backtestResult.stats.totalPnLPercent || 0) >= 0 ? 'text-success' : 'text-destructive'
                 }`}>
-                  {backtestResult.stats.totalPnLPercent >= 0 ? '+' : ''}
-                  {backtestResult.stats.totalPnLPercent.toFixed(2)}%
+                  {Number(backtestResult.stats.totalPnLPercent || 0) >= 0 ? '+' : ''}
+                  {Number(backtestResult.stats.totalPnLPercent || 0).toFixed(2)}%
                 </div>
               </div>
               <div>
                 <div className="text-muted-foreground">Win Rate</div>
                 <div className="font-mono font-medium">
-                  {backtestResult.stats.winRate.toFixed(1)}%
+                  {Number(backtestResult.stats.winRate || 0).toFixed(1)}%
                 </div>
               </div>
               <div>
                 <div className="text-muted-foreground">Total Trades</div>
                 <div className="font-mono font-medium">
-                  {backtestResult.stats.totalTrades}
+                  {backtestResult.stats.totalTrades || 0}
                 </div>
               </div>
               <div>
                 <div className="text-muted-foreground">Max Drawdown</div>
                 <div className="font-mono font-medium text-destructive">
-                  -{backtestResult.stats.maxDrawdown.toFixed(2)}%
+                  -{Number(backtestResult.stats.maxDrawdown || 0).toFixed(2)}%
                 </div>
               </div>
               <div>
                 <div className="text-muted-foreground">Profit Factor</div>
                 <div className={`font-mono font-medium ${
-                  backtestResult.stats.profitFactor >= 1 ? 'text-success' : 'text-destructive'
+                  Number(backtestResult.stats.profitFactor || 0) >= 1 ? 'text-success' : 'text-destructive'
                 }`}>
-                  {backtestResult.stats.profitFactor.toFixed(2)}
+                  {Number(backtestResult.stats.profitFactor || 0).toFixed(2)}
                 </div>
               </div>
               <div>
                 <div className="text-muted-foreground">Sharpe Ratio</div>
                 <div className={`font-mono font-medium ${
-                  backtestResult.stats.sharpeRatio >= 1 ? 'text-success' : 
-                  backtestResult.stats.sharpeRatio >= 0.5 ? 'text-yellow-500' : 'text-destructive'
+                  Number(backtestResult.stats.sharpeRatio || 0) >= 1 ? 'text-success' : 
+                  Number(backtestResult.stats.sharpeRatio || 0) >= 0.5 ? 'text-yellow-500' : 'text-destructive'
                 }`}>
-                  {backtestResult.stats.sharpeRatio.toFixed(2)}
+                  {Number(backtestResult.stats.sharpeRatio || 0).toFixed(2)}
                 </div>
               </div>
             </div>

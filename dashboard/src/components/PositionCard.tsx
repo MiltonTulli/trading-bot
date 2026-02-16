@@ -25,7 +25,10 @@ export function PositionCard() {
   }
 
   const isLong = position.direction === 'long'
-  const pnlColor = position.unrealizedPnL >= 0 ? 'text-success' : 'text-destructive'
+  const unrealizedPnL = Number(position.unrealizedPnL || 0)
+  const entryPrice = Number(position.entryPrice || 0)
+  const quantity = Number(position.quantity || 0)
+  const pnlColor = unrealizedPnL >= 0 ? 'text-success' : 'text-destructive'
   
   // Calculate hours since entry
   const hoursSinceEntry = Math.floor(
@@ -55,7 +58,7 @@ export function PositionCard() {
             <span className="font-medium text-lg">{position.symbol}</span>
           </div>
           <div className={`text-lg font-bold ${pnlColor}`}>
-            {position.unrealizedPnL >= 0 ? '+' : ''}${position.unrealizedPnL.toFixed(2)}
+            {unrealizedPnL >= 0 ? '+' : ''}${unrealizedPnL.toFixed(2)}
           </div>
         </div>
 
@@ -63,11 +66,11 @@ export function PositionCard() {
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <div className="text-muted-foreground mb-1">Entry Price</div>
-            <div className="font-mono font-medium">${position.entryPrice.toLocaleString()}</div>
+            <div className="font-mono font-medium">${entryPrice.toLocaleString()}</div>
           </div>
           <div>
             <div className="text-muted-foreground mb-1">Quantity</div>
-            <div className="font-mono font-medium">{position.quantity}</div>
+            <div className="font-mono font-medium">{quantity}</div>
           </div>
         </div>
 
@@ -92,7 +95,7 @@ export function PositionCard() {
               <span>Position Value</span>
             </div>
             <div className="font-mono font-medium">
-              ${(position.entryPrice * position.quantity).toLocaleString()}
+              ${(entryPrice * quantity).toLocaleString()}
             </div>
           </div>
         </div>
