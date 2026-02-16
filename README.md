@@ -49,13 +49,13 @@ Edit `config.json` to tune the strategy:
 Reproduce the 61-month backtest results:
 
 ```bash
-# Quick single-run backtest (recommended)
+# Full backtest: period breakdown + monthly breakdown
 npm run backtest
 
-# Monthly backtest (breakout + combined strategies, Jan 2021 → Feb 2026)
-node archive/backtest-monthly.cjs
+# Monthly breakdown only
+npm run backtest:monthly
 
-# Full multi-strategy sweep (3,240+ configs across 4 market periods)
+# Archive: original multi-strategy sweep (3,240+ configs)
 node archive/backtest-v7b.cjs
 ```
 
@@ -105,11 +105,11 @@ export BINANCE_API_SECRET="your-api-secret"
 | Command | Description |
 |---------|-------------|
 | `npm start` | Start the trading bot (paper or live) |
-| `npm run backtest` | Run quick backtest |
+| `npm run backtest` | Full backtest (periods + monthly) |
+| `npm run backtest:monthly` | Monthly breakdown only |
 | `npm run dashboard` | Launch monitoring dashboard |
 | `npm test` | Run tests |
-| `node archive/backtest-monthly.cjs` | Monthly backtest (61 months) |
-| `node archive/backtest-v7b.cjs` | Full multi-strategy sweep (3,240+ configs) |
+| `node archive/backtest-v7b.cjs` | Archive: full multi-strategy sweep |
 
 ---
 
@@ -545,13 +545,13 @@ Editá `config.json` para ajustar la estrategia:
 Reproducí los resultados del backtest de 61 meses:
 
 ```bash
-# Backtest rápido single-run (recomendado)
+# Backtest completo: períodos + mensual
 npm run backtest
 
-# Backtest mensual (breakout + estrategias combinadas, Ene 2021 → Feb 2026)
-node archive/backtest-monthly.cjs
+# Solo breakdown mensual
+npm run backtest:monthly
 
-# Barrido completo multi-estrategia (3,240+ configs en 4 períodos de mercado)
+# Archivo: barrido multi-estrategia original (3,240+ configs)
 node archive/backtest-v7b.cjs
 ```
 

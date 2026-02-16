@@ -8,6 +8,7 @@
     "start": "node src/index.js",
     "dashboard": "node src/dashboard.js",
     "backtest": "node src/backtest.js",
+    "backtest:monthly": "node src/backtest.js monthly",
     "test": "node src/test.js"
   },
   "keywords": [

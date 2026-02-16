@@ -1,7 +1,7 @@
 {
   "symbol": "ETHUSDT",
   "interval": "1h",
-  "timestamp": 1771255447619,
+  "timestamp": 1771256054100,
   "candles": [
     {
       "openTime": "2026-01-26T20:00:00.000Z",
@@ -6494,14 +6494,14 @@
       "openTime": "2026-02-16T15:00:00.000Z",
       "open": 1973.13,
       "high": 1986.12,
-      "low": 1966.72,
-      "close": 1969.63,
-      "volume": 9769.437,
+      "low": 1937.24,
+      "close": 1942.91,
+      "volume": 22296.5056,
       "closeTime": "2026-02-16T15:59:59.999Z",
-      "quoteVolume": 19312404.079321,
-      "trades": 155759,
-      "buyBaseVolume": 4436.0841,
-      "buyQuoteVolume": 8771173.493125
+      "quoteVolume": 43753462.68387,
+      "trades": 328978,
+      "buyBaseVolume": 9997.2572,
+      "buyQuoteVolume": 19619727.685598
     }
   ]
 }
