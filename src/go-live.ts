@@ -1,10 +1,10 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * Switch to live trading on Binance Futures
- * Usage: node src/go-live.js <API_KEY> <API_SECRET>
- * To go back to paper: node src/go-live.js --paper
+ * Usage: bun run src/go-live.ts <API_KEY> <API_SECRET>
+ * To go back to paper: bun run src/go-live.ts --paper
  */
-import { goLive, goPaper } from './breakout-engine.js';
+import { goLive, goPaper } from './breakout-engine.ts';
 
 const args = process.argv.slice(2);
 
@@ -18,14 +18,14 @@ if (args[0] === '--paper') {
     console.log('⚠️  USDT Balance:', r.usdtBalance);
     console.log('⚠️  The bot will now execute REAL trades on Binance Futures!');
   } catch (e) {
-    console.error('❌ Failed to connect to Binance:', e.message);
+    console.error('❌ Failed to connect to Binance:', (e as Error).message);
     console.log('Reverting to paper mode...');
     await goPaper();
   }
 } else {
   console.log('Usage:');
-  console.log('  Go live:  node src/go-live.js <BINANCE_API_KEY> <BINANCE_API_SECRET>');
-  console.log('  Go paper: node src/go-live.js --paper');
+  console.log('  Go live:  bun run src/go-live.ts <BINANCE_API_KEY> <BINANCE_API_SECRET>');
+  console.log('  Go paper: bun run src/go-live.ts --paper');
   console.log('');
   console.log('Requirements for Binance API Key:');
   console.log('  - Enable Futures Trading');

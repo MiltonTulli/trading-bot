@@ -1,0 +1,58 @@
+{
+  "balance": 10235.95,
+  "equity": 10235.95,
+  "positions": {},
+  "closedTrades": [
+    {
+      "id": "BTCUSDT_1771204904842",
+      "symbol": "BTCUSDT",
+      "direction": "long",
+      "entryPrice": 69000,
+      "quantity": 0.1,
+      "stopLoss": 68000,
+      "takeProfits": [
+        {
+          "price": 71000,
+          "ratio": 2
+        },
+        {
+          "price": 73000,
+          "ratio": 4
+        },
+        {
+          "price": 75000,
+          "ratio": 6
+        }
+      ],
+      "entryTime": "2026-02-16T01:21:44.842Z",
+      "entryFee": 6.9,
+      "signal": {
+        "type": "trend_following",
+        "confidence": 75,
+        "reasoning": "Test trend following signal",
+        "riskRewardRatio": 2
+      },
+      "status": "closed",
+      "currentPrice": 71500,
+      "unrealizedPnL": 250,
+      "maxFavorableExcursion": 250,
+      "maxAdverseExcursion": -50,
+      "exitPrice": 71500,
+      "exitTime": "2026-02-16T01:21:44.844Z",
+      "exitFee": 7.15,
+      "grossPnL": 250,
+      "netPnL": 235.95,
+      "exitReason": "take_profit_2",
+      "holdingPeriod": 2
+    }
+  ],
+  "openTrades": {},
+  "totalTrades": 1,
+  "winningTrades": 1,
+  "losingTrades": 0,
+  "totalProfit": 235.95,
+  "totalLoss": 0,
+  "maxDrawdown": 0.6956899999999999,
+  "peakEquity": 10235.95,
+  "lastUpdated": "2026-02-16T16:29:52.760Z"
+}

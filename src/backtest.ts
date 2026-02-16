@@ -1,24 +1,25 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * Breakout Strategy Backtester
- * 
+ *
  * Runs the winning Breakout #2 strategy:
  *   lookback=10, volMult=2.0, SL=3%, TP=6%, posSize=20%, leverage=5x
- * 
+ *
  * Usage:
- *   npm run backtest           → Full backtest + period breakdown
- *   npm run backtest:monthly   → Month-by-month breakdown
+ *   bun run backtest           → Full backtest + period breakdown
+ *   bun run backtest -- monthly → Month-by-month breakdown
  */
 
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import type { BacktestCandle, BacktestResult, BacktestPeriodResult, BacktestDataset, StrategyParams } from './types.ts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = join(__dirname, '..', 'data', 'backtest');
 
 // ─── Winning strategy params ───────────────────────────────────────
-const STRATEGY = {
+const STRATEGY: StrategyParams = {
   lookback: 10,
   volMult: 2.0,
   sl: 0.03,
@@ -32,9 +33,20 @@ const INITIAL_BALANCE = 10000;
 
 // ─── Data loading ──────────────────────────────────────────────────
 
-function loadCandles(file) {
-  const raw = JSON.parse(readFileSync(join(DATA_DIR, file), 'utf8'));
-  return raw.candles.map(c => ({
+interface RawCandleData {
+  candles: Array<{
+    openTime: string | number;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+  }>;
+}
+
+function loadCandles(file: string): BacktestCandle[] {
+  const raw: RawCandleData = JSON.parse(readFileSync(join(DATA_DIR, file), 'utf8'));
+  return raw.candles.map((c) => ({
     t: new Date(c.openTime).getTime(),
     o: c.open,
     h: c.high,
@@ -47,7 +59,7 @@ function loadCandles(file) {
 
 // ─── Breakout signal ───────────────────────────────────────────────
 
-function breakoutSignal(candles, i, params) {
+function breakoutSignal(candles: BacktestCandle[], i: number, params: StrategyParams): 0 | 1 | -1 {
   const { lookback, volMult } = params;
   if (i < lookback + 1) return 0;
 
@@ -59,10 +71,8 @@ function breakoutSignal(candles, i, params) {
   }
   avgVol /= lookback;
 
-  // Volume filter: only trade on above-average volume
   if (candles[i].v < avgVol * volMult) return 0;
 
-  // Breakout: close above N-candle high → long, below low → short
   if (candles[i].c > hi) return 1;
   if (candles[i].c < lo) return -1;
   return 0;
@@ -70,17 +80,22 @@ function breakoutSignal(candles, i, params) {
 
 // ─── Trade engine ──────────────────────────────────────────────────
 
-function runTrades(candles, params = STRATEGY) {
+interface BacktestPosition {
+  side: 1 | -1;
+  entry: number;
+  size: number;
+}
+
+function runTrades(candles: BacktestCandle[], params: StrategyParams = STRATEGY): BacktestResult {
   const { sl, tp, posSize, leverage } = params;
   let balance = INITIAL_BALANCE;
-  let pos = null;
+  let pos: BacktestPosition | null = null;
   let trades = 0, wins = 0, maxBal = INITIAL_BALANCE, maxDD = 0;
   let grossProfit = 0, grossLoss = 0;
 
   for (let i = 1; i < candles.length; i++) {
     const c = candles[i];
 
-    // Check open position for SL/TP
     if (pos) {
       let pnl = 0;
       if (pos.side === 1) {
@@ -104,7 +119,6 @@ function runTrades(candles, params = STRATEGY) {
       }
     }
 
-    // Open new position if flat
     if (!pos && balance > 1000) {
       const sig = breakoutSignal(candles, i, params);
       if (sig !== 0) {
@@ -118,7 +132,6 @@ function runTrades(candles, params = STRATEGY) {
     if (balance <= 0) { balance = 0; break; }
   }
 
-  // Close remaining position at last close
   if (pos) {
     const lp = candles[candles.length - 1].c;
     const move = pos.side === 1
@@ -144,8 +157,8 @@ function runTrades(candles, params = STRATEGY) {
 
 // ─── Period backtest ───────────────────────────────────────────────
 
-function runPeriodBacktest() {
-  const datasets = [
+function runPeriodBacktest(): void {
+  const datasets: BacktestDataset[] = [
     { name: 'Bull 2021', file: 'BTCUSDT_4h_bull_2021.json' },
     { name: 'Bear 2022', file: 'BTCUSDT_4h_bear_2022.json' },
     { name: 'Recovery 2023', file: 'BTCUSDT_4h_recovery_2023.json' },
@@ -169,7 +182,7 @@ function runPeriodBacktest() {
   );
   console.log('-'.repeat(70));
 
-  const results = [];
+  const results: BacktestPeriodResult[] = [];
   for (const ds of datasets) {
     try {
       const candles = loadCandles(ds.file);
@@ -186,7 +199,7 @@ function runPeriodBacktest() {
         String(r.pf).padStart(7)
       );
     } catch (e) {
-      console.log(`${ds.name.padEnd(22)} ⚠ ${e.message}`);
+      console.log(`${ds.name.padEnd(22)} ⚠ ${(e as Error).message}`);
     }
   }
 
@@ -197,11 +210,10 @@ function runPeriodBacktest() {
 
 // ─── Monthly backtest ──────────────────────────────────────────────
 
-function runMonthlyBacktest() {
+function runMonthlyBacktest(): void {
   const candles = loadCandles('BTCUSDT_4h_full.json');
 
-  // Group candles by YYYY-MM
-  const months = {};
+  const months: Record<string, BacktestCandle[]> = {};
   for (const c of candles) {
     const ym = c.date.slice(0, 7);
     if (!months[ym]) months[ym] = [];
@@ -233,8 +245,7 @@ function runMonthlyBacktest() {
   let compoundBal = INITIAL_BALANCE;
 
   for (const ym of sortedMonths) {
-    // Build slice with warmup + this month's candles
-    const monthStart = candles.findIndex(c => c.date.startsWith(ym));
+    const monthStart = candles.findIndex((c) => c.date.startsWith(ym));
     if (monthStart < 0) continue;
     let monthEnd = candles.findIndex((c, idx) => idx > monthStart && !c.date.startsWith(ym));
     if (monthEnd < 0) monthEnd = candles.length;

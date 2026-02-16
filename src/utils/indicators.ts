@@ -8,14 +8,21 @@
  * @module utils/indicators
  */
 
+import type {
+  CandleWithClose,
+  CandleWithHLC,
+  CandleWithVolume,
+  CandleWithHigh,
+  CandleWithLow,
+  BollingerBands,
+  MACDResult,
+} from '../types.ts';
+
 /**
  * Exponential Moving Average (EMA).
- * @param {Array<{close: number}>} candles - OHLCV candles.
- * @param {number} period - Look-back period.
- * @returns {number[]} Sparse array of EMA values.
  */
-export function calculateEMA(candles, period) {
-  const ema = [];
+export function calculateEMA(candles: CandleWithClose[], period: number): number[] {
+  const ema: number[] = [];
   const multiplier = 2 / (period + 1);
 
   let sum = 0;
@@ -32,12 +39,9 @@ export function calculateEMA(candles, period) {
 
 /**
  * Simple Moving Average (SMA).
- * @param {Array<{close: number}>} candles - OHLCV candles.
- * @param {number} period - Look-back period.
- * @returns {number[]} Sparse array of SMA values.
  */
-export function calculateSMA(candles, period) {
-  const sma = [];
+export function calculateSMA(candles: CandleWithClose[], period: number): number[] {
+  const sma: number[] = [];
   for (let i = period - 1; i < candles.length; i++) {
     let sum = 0;
     for (let j = 0; j < period; j++) {
@@ -50,12 +54,9 @@ export function calculateSMA(candles, period) {
 
 /**
  * SMA over a plain numeric array (e.g. ATR values).
- * @param {number[]} values - Sparse numeric array.
- * @param {number} period - Look-back period.
- * @returns {number[]} Sparse array of SMA values.
  */
-export function calculateSMAFromValues(values, period) {
-  const sma = [];
+export function calculateSMAFromValues(values: number[], period: number): number[] {
+  const sma: number[] = [];
   for (let i = period - 1; i < values.length; i++) {
     let sum = 0;
     for (let j = 0; j < period; j++) {
@@ -68,14 +69,11 @@ export function calculateSMAFromValues(values, period) {
 
 /**
  * Relative Strength Index (RSI).
- * @param {Array<{close: number}>} candles - OHLCV candles.
- * @param {number} [period=14] - Look-back period.
- * @returns {number[]} Sparse array of RSI values (0-100).
  */
-export function calculateRSI(candles, period = 14) {
-  const rsi = [];
-  const gains = [];
-  const losses = [];
+export function calculateRSI(candles: CandleWithClose[], period: number = 14): number[] {
+  const rsi: number[] = [];
+  const gains: number[] = [];
+  const losses: number[] = [];
 
   for (let i = 1; i < candles.length; i++) {
     const change = candles[i].close - candles[i - 1].close;
@@ -106,13 +104,10 @@ export function calculateRSI(candles, period = 14) {
 
 /**
  * Average True Range (ATR).
- * @param {Array<{high: number, low: number, close: number}>} candles
- * @param {number} [period=14]
- * @returns {number[]} Sparse array of ATR values.
  */
-export function calculateATR(candles, period = 14) {
-  const tr = [];
-  const atr = [];
+export function calculateATR(candles: CandleWithHLC[], period: number = 14): number[] {
+  const tr: number[] = [];
+  const atr: number[] = [];
 
   for (let i = 1; i < candles.length; i++) {
     const { high, low } = candles[i];
@@ -135,15 +130,12 @@ export function calculateATR(candles, period = 14) {
 
 /**
  * Average Directional Index (ADX) with +DI / -DI.
- * @param {Array<{high: number, low: number, close: number}>} candles
- * @param {number} [period=14]
- * @returns {number[]} Sparse array of ADX values.
  */
-export function calculateADX(candles, period = 14) {
-  const adx = [];
-  const plusDI = [];
-  const minusDI = [];
-  const dx = [];
+export function calculateADX(candles: CandleWithHLC[], period: number = 14): number[] {
+  const adx: number[] = [];
+  const plusDI: number[] = [];
+  const minusDI: number[] = [];
+  const dx: number[] = [];
 
   for (let i = 1; i < candles.length; i++) {
     if (i < period) continue;
@@ -193,15 +185,15 @@ export function calculateADX(candles, period = 14) {
 
 /**
  * Bollinger Bands.
- * @param {Array<{close: number}>} candles
- * @param {number} [period=20]
- * @param {number} [stdDev=2]
- * @returns {{upper: number[], middle: number[], lower: number[]}}
  */
-export function calculateBollingerBands(candles, period = 20, stdDev = 2) {
-  const upper = [];
-  const middle = [];
-  const lower = [];
+export function calculateBollingerBands(
+  candles: CandleWithClose[],
+  period: number = 20,
+  stdDev: number = 2
+): BollingerBands {
+  const upper: number[] = [];
+  const middle: number[] = [];
+  const lower: number[] = [];
 
   for (let i = period - 1; i < candles.length; i++) {
     let sum = 0;
@@ -225,12 +217,9 @@ export function calculateBollingerBands(candles, period = 20, stdDev = 2) {
 
 /**
  * Volume average over a window.
- * @param {Array<{volume: number}>} candles
- * @param {number} period
- * @returns {number[]}
  */
-export function calculateVolumeAverage(candles, period) {
-  const avg = [];
+export function calculateVolumeAverage(candles: CandleWithVolume[], period: number): number[] {
+  const avg: number[] = [];
   for (let i = period - 1; i < candles.length; i++) {
     let sum = 0;
     for (let j = 0; j < period; j++) {
@@ -243,12 +232,9 @@ export function calculateVolumeAverage(candles, period) {
 
 /**
  * EMA slope (percentage change over N periods).
- * @param {number[]} values - Sparse EMA array.
- * @param {number} period
- * @returns {number[]}
  */
-export function calculateSlope(values, period) {
-  const slopes = [];
+export function calculateSlope(values: number[], period: number): number[] {
+  const slopes: number[] = [];
   for (let i = period; i < values.length; i++) {
     if (values[i] && values[i - period]) {
       slopes[i] = (values[i] - values[i - period]) / values[i - period];
@@ -259,24 +245,24 @@ export function calculateSlope(values, period) {
 
 /**
  * MACD (fast EMA − slow EMA) with signal line and histogram.
- * @param {Array<{close: number}>} candles
- * @param {number} fastPeriod
- * @param {number} slowPeriod
- * @param {number} signalPeriod
- * @returns {{macdLine: number[], signalLine: number[], histogram: number[]}}
  */
-export function calculateMACD(candles, fastPeriod, slowPeriod, signalPeriod) {
+export function calculateMACD(
+  candles: CandleWithClose[],
+  fastPeriod: number,
+  slowPeriod: number,
+  signalPeriod: number
+): MACDResult {
   const emaFast = calculateEMA(candles, fastPeriod);
   const emaSlow = calculateEMA(candles, slowPeriod);
 
-  const macdLine = [];
+  const macdLine: number[] = [];
   for (let i = 0; i < candles.length; i++) {
     if (emaFast[i] !== undefined && emaSlow[i] !== undefined) {
       macdLine[i] = emaFast[i] - emaSlow[i];
     }
   }
 
-  const signalLine = [];
+  const signalLine: number[] = [];
   const multiplier = 2 / (signalPeriod + 1);
 
   let firstValid = -1;
@@ -293,7 +279,7 @@ export function calculateMACD(candles, fastPeriod, slowPeriod, signalPeriod) {
     }
   }
 
-  const histogram = [];
+  const histogram: number[] = [];
   for (let i = 0; i < candles.length; i++) {
     if (macdLine[i] !== undefined && signalLine[i] !== undefined) {
       histogram[i] = macdLine[i] - signalLine[i];
@@ -305,12 +291,9 @@ export function calculateMACD(candles, fastPeriod, slowPeriod, signalPeriod) {
 
 /**
  * Find highest high over a look-back window.
- * @param {Array<{high: number}>} candles
- * @param {number} lookback
- * @returns {number[]}
  */
-export function findSwingHighs(candles, lookback) {
-  const highs = [];
+export function findSwingHighs(candles: CandleWithHigh[], lookback: number): number[] {
+  const highs: number[] = [];
   for (let i = lookback; i < candles.length; i++) {
     let max = -Infinity;
     for (let j = i - lookback; j < i; j++) {
@@ -323,12 +306,9 @@ export function findSwingHighs(candles, lookback) {
 
 /**
  * Find lowest low over a look-back window.
- * @param {Array<{low: number}>} candles
- * @param {number} lookback
- * @returns {number[]}
  */
-export function findSwingLows(candles, lookback) {
-  const lows = [];
+export function findSwingLows(candles: CandleWithLow[], lookback: number): number[] {
+  const lows: number[] = [];
   for (let i = lookback; i < candles.length; i++) {
     let min = Infinity;
     for (let j = i - lookback; j < i; j++) {

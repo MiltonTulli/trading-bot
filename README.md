@@ -11,7 +11,7 @@ Automated bot that trades BTC/USDT on perpetual futures with a breakout + volume
 
 ### Prerequisites
 
-- **Node.js** >= 16.0.0 ([download](https://nodejs.org/))
+- **Bun** >= 1.0.0 ([install](https://bun.sh/))
 - **Git** (to clone the repo)
 - A **Binance** account with Futures enabled (only for live trading)
 
@@ -20,7 +20,7 @@ Automated bot that trades BTC/USDT on perpetual futures with a breakout + volume
 ```bash
 git clone https://github.com/MiltonTulli/trading-bot.git
 cd trading-bot
-npm install
+bun install
 ```
 
 ### Configuration
@@ -50,13 +50,13 @@ Reproduce the 61-month backtest results:
 
 ```bash
 # Full backtest: period breakdown + monthly breakdown
-npm run backtest
+bun run backtest
 
 # Monthly breakdown only
-npm run backtest:monthly
+bun run backtest:monthly
 
 # Archive: original multi-strategy sweep (3,240+ configs)
-node archive/backtest-v7b.cjs
+bun run archive/backtest-v7b.cjs
 ```
 
 > Backtest data files live in `data/backtest/`. Funding rate and Fear & Greed data are in `data/funding/` and `data/sentiment/`.
@@ -66,9 +66,9 @@ node archive/backtest-v7b.cjs
 Start the bot in paper trading mode (no real money, no API keys needed):
 
 ```bash
-npm start
+bun run start
 # or
-node src/index.js
+bun run src/index.ts
 ```
 
 The bot will:
@@ -79,11 +79,10 @@ The bot will:
 Other commands:
 
 ```bash
-node src/index.js test      # Test initialization & connectivity
-node src/index.js report    # Generate performance report
-node src/index.js reset     # Reset paper portfolio to $10K
-node src/index.js clean     # Clean old log files
-npm run dashboard           # Launch the dashboard
+bun run src/index.ts test      # Test initialization & connectivity
+bun run src/index.ts report    # Generate performance report
+bun run src/index.ts reset     # Reset paper portfolio to $10K
+bun run src/index.ts clean     # Clean old log files
 ```
 
 ### Going Live (Binance Futures)
@@ -104,12 +103,11 @@ export BINANCE_API_SECRET="your-api-secret"
 
 | Command | Description |
 |---------|-------------|
-| `npm start` | Start the trading bot (paper or live) |
-| `npm run backtest` | Full backtest (periods + monthly) |
-| `npm run backtest:monthly` | Monthly breakdown only |
-| `npm run dashboard` | Launch monitoring dashboard |
-| `npm test` | Run tests |
-| `node archive/backtest-v7b.cjs` | Archive: full multi-strategy sweep |
+| `bun run start` | Start the trading bot (paper or live) |
+| `bun run backtest` | Full backtest (periods + monthly) |
+| `bun run backtest:monthly` | Monthly breakdown only |
+| `bun run test` | Run tests |
+| `bun run archive/backtest-v7b.cjs` | Archive: full multi-strategy sweep |
 
 ---
 
@@ -507,7 +505,7 @@ Bot automático que opera BTC/USDT en futuros perpetuos con una estrategia de br
 
 ### Requisitos
 
-- **Node.js** >= 16.0.0 ([descargar](https://nodejs.org/))
+- **Bun** >= 1.0.0 ([instalar](https://bun.sh/))
 - **Git** (para clonar el repo)
 - Una cuenta de **Binance** con Futuros habilitados (solo para trading real)
 
@@ -516,7 +514,7 @@ Bot automático que opera BTC/USDT en futuros perpetuos con una estrategia de br
 ```bash
 git clone https://github.com/MiltonTulli/trading-bot.git
 cd trading-bot
-npm install
+bun install
 ```
 
 ### Configuración
@@ -546,13 +544,13 @@ Reproducí los resultados del backtest de 61 meses:
 
 ```bash
 # Backtest completo: períodos + mensual
-npm run backtest
+bun run backtest
 
 # Solo breakdown mensual
-npm run backtest:monthly
+bun run backtest:monthly
 
 # Archivo: barrido multi-estrategia original (3,240+ configs)
-node archive/backtest-v7b.cjs
+bun run archive/backtest-v7b.cjs
 ```
 
 > Los archivos de data del backtest están en `data/backtest/`. Funding rates y Fear & Greed en `data/funding/` y `data/sentiment/`.
@@ -562,9 +560,9 @@ node archive/backtest-v7b.cjs
 Iniciá el bot en modo paper trading (sin plata real, no necesitás API keys):
 
 ```bash
-npm start
+bun run start
 # o
-node src/index.js
+bun run src/index.ts
 ```
 
 El bot va a:
@@ -575,11 +573,10 @@ El bot va a:
 Otros comandos:
 
 ```bash
-node src/index.js test      # Testear inicialización y conectividad
-node src/index.js report    # Generar reporte de performance
-node src/index.js reset     # Resetear portfolio a $10K
-node src/index.js clean     # Limpiar logs viejos
-npm run dashboard           # Lanzar el dashboard
+bun run src/index.ts test      # Testear inicialización y conectividad
+bun run src/index.ts report    # Generar reporte de performance
+bun run src/index.ts reset     # Resetear portfolio a $10K
+bun run src/index.ts clean     # Limpiar logs viejos
 ```
 
 ### Ir a Producción (Binance Futures)
@@ -600,12 +597,11 @@ export BINANCE_API_SECRET="tu-api-secret"
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm start` | Iniciar el bot (paper o live) |
-| `npm run backtest` | Correr backtest rápido |
-| `npm run dashboard` | Lanzar dashboard de monitoreo |
-| `npm test` | Correr tests |
-| `node archive/backtest-monthly.cjs` | Backtest mensual (61 meses) |
-| `node archive/backtest-v7b.cjs` | Barrido multi-estrategia (3,240+ configs) |
+| `bun run start` | Iniciar el bot (paper o live) |
+| `bun run backtest` | Correr backtest rápido |
+| `bun run test` | Correr tests |
+| `bun run archive/backtest-monthly.cjs` | Backtest mensual (61 meses) |
+| `bun run archive/backtest-v7b.cjs` | Barrido multi-estrategia (3,240+ configs) |
 
 ---
 

@@ -2,6 +2,20 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
+import type {
+  Candle,
+  Config,
+  BotState,
+  Position,
+  TradeRecord,
+  EngineResult,
+  StrategyParams,
+  BinanceOrderResult,
+  BinanceBalance,
+  BinancePositionRisk,
+  GoLiveResult,
+  GoPaperResult,
+} from './types.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA = path.join(__dirname, '..', 'data');
@@ -9,68 +23,73 @@ const STATE_FILE = path.join(DATA, 'breakout-state.json');
 const TRADES_FILE = path.join(DATA, 'breakout-trades.json');
 const CONFIG_FILE = path.join(__dirname, '..', 'config.json');
 
-const PARAMS = { lookback: 10, volMult: 2, sl: 0.03, tp: 0.06, posSize: 0.2, leverage: 5 };
+const PARAMS: StrategyParams = { lookback: 10, volMult: 2, sl: 0.03, tp: 0.06, posSize: 0.2, leverage: 5 };
 const FEE_PAPER = 0.001;   // 0.1% taker
 const FEE_LIVE = 0.0004;   // 0.04% with BNB discount on futures
 
 // ============ CONFIG ============
-function loadConfig() {
+function loadConfig(): Partial<Config> {
   try { return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8')); } catch { return {}; }
 }
 
-function isLiveMode() {
+function isLiveMode(): boolean {
   const cfg = loadConfig();
-  return cfg.mode === 'live' && cfg.binanceApiKey && cfg.binanceApiSecret;
+  return cfg.mode === 'live' && !!cfg.binanceApiKey && !!cfg.binanceApiSecret;
 }
 
 // ============ STATE ============
-function loadState() {
+function loadState(): BotState {
   return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
 }
 
-function saveState(state) {
+function saveState(state: BotState): void {
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
 }
 
-function appendTrade(trade) {
-  let trades = [];
-  try { trades = JSON.parse(fs.readFileSync(TRADES_FILE, 'utf8')); } catch {}
+function appendTrade(trade: TradeRecord): void {
+  let trades: TradeRecord[] = [];
+  try { trades = JSON.parse(fs.readFileSync(TRADES_FILE, 'utf8')); } catch { /* empty */ }
   trades.push(trade);
   fs.writeFileSync(TRADES_FILE, JSON.stringify(trades, null, 2));
 }
 
 // ============ BINANCE API ============
-async function fetchCandles(symbol = 'BTCUSDT', interval = '4h', limit = 50) {
+async function fetchCandles(symbol: string = 'BTCUSDT', interval: string = '4h', limit: number = 50): Promise<Candle[]> {
   const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
   const res = await fetch(url);
-  const data = await res.json();
-  return data.map(k => ({
-    t: k[0],
-    o: parseFloat(k[1]),
-    h: parseFloat(k[2]),
-    l: parseFloat(k[3]),
-    c: parseFloat(k[4]),
-    v: parseFloat(k[5]),
+  const data = await res.json() as Array<Array<string | number>>;
+  return data.map((k) => ({
+    t: k[0] as number,
+    o: parseFloat(k[1] as string),
+    h: parseFloat(k[2] as string),
+    l: parseFloat(k[3] as string),
+    c: parseFloat(k[4] as string),
+    v: parseFloat(k[5] as string),
   }));
 }
 
-function binanceSign(params, secret) {
-  const qs = Object.entries(params).map(([k,v]) => `${k}=${v}`).join('&');
+function binanceSign(params: Record<string, string | number>, secret: string): string {
+  const qs = Object.entries(params).map(([k, v]) => `${k}=${v}`).join('&');
   const sig = crypto.createHmac('sha256', secret).update(qs).digest('hex');
   return `${qs}&signature=${sig}`;
 }
 
-async function binanceFuturesRequest(method, endpoint, params = {}, cfg) {
+async function binanceFuturesRequest(
+  method: 'GET' | 'POST',
+  endpoint: string,
+  params: Record<string, string | number> = {},
+  cfg: { binanceApiKey: string; binanceApiSecret: string }
+): Promise<Record<string, unknown>> {
   const baseUrl = 'https://fapi.binance.com';
   params.timestamp = Date.now();
   params.recvWindow = 5000;
   const signed = binanceSign(params, cfg.binanceApiSecret);
-  
-  const url = method === 'GET' 
+
+  const url = method === 'GET'
     ? `${baseUrl}${endpoint}?${signed}`
     : `${baseUrl}${endpoint}`;
-  
-  const opts = {
+
+  const opts: RequestInit = {
     method,
     headers: {
       'X-MBX-APIKEY': cfg.binanceApiKey,
@@ -78,50 +97,50 @@ async function binanceFuturesRequest(method, endpoint, params = {}, cfg) {
     },
   };
   if (method === 'POST') opts.body = signed;
-  
+
   const res = await fetch(url, opts);
-  const data = await res.json();
-  if (data.code && data.code < 0) throw new Error(`Binance error ${data.code}: ${data.msg}`);
+  const data = await res.json() as Record<string, unknown>;
+  if (data.code && (data.code as number) < 0) throw new Error(`Binance error ${data.code}: ${data.msg}`);
   return data;
 }
 
 // ============ LIVE TRADING ============
-async function setLeverage(symbol, leverage, cfg) {
+async function setLeverage(symbol: string, leverage: number, cfg: { binanceApiKey: string; binanceApiSecret: string }): Promise<Record<string, unknown>> {
   return binanceFuturesRequest('POST', '/fapi/v1/leverage', { symbol, leverage }, cfg);
 }
 
-async function openPosition(symbol, side, quantity, cfg) {
+async function openPosition(symbol: string, side: 1 | -1, quantity: number, cfg: { binanceApiKey: string; binanceApiSecret: string }): Promise<BinanceOrderResult> {
   return binanceFuturesRequest('POST', '/fapi/v1/order', {
     symbol,
     side: side === 1 ? 'BUY' : 'SELL',
     type: 'MARKET',
     quantity: quantity.toFixed(3),
-  }, cfg);
+  }, cfg) as Promise<BinanceOrderResult>;
 }
 
-async function closePosition(symbol, side, quantity, cfg) {
+async function closePosition(symbol: string, side: 1 | -1, quantity: number, cfg: { binanceApiKey: string; binanceApiSecret: string }): Promise<BinanceOrderResult> {
   return binanceFuturesRequest('POST', '/fapi/v1/order', {
     symbol,
-    side: side === 1 ? 'SELL' : 'BUY', // opposite to close
+    side: side === 1 ? 'SELL' : 'BUY',
     type: 'MARKET',
     quantity: quantity.toFixed(3),
     reduceOnly: 'true',
-  }, cfg);
+  }, cfg) as Promise<BinanceOrderResult>;
 }
 
-async function getAccountBalance(cfg) {
-  const data = await binanceFuturesRequest('GET', '/fapi/v2/balance', {}, cfg);
-  const usdt = data.find(a => a.asset === 'USDT');
+async function getAccountBalance(cfg: { binanceApiKey: string; binanceApiSecret: string }): Promise<number> {
+  const data = await binanceFuturesRequest('GET', '/fapi/v2/balance', {}, cfg) as unknown as BinanceBalance[];
+  const usdt = data.find((a) => a.asset === 'USDT');
   return usdt ? parseFloat(usdt.balance) : 0;
 }
 
-async function getPositions(cfg) {
-  const data = await binanceFuturesRequest('GET', '/fapi/v2/positionRisk', { symbol: 'BTCUSDT' }, cfg);
-  return data.filter(p => parseFloat(p.positionAmt) !== 0);
+async function getPositions(cfg: { binanceApiKey: string; binanceApiSecret: string }): Promise<BinancePositionRisk[]> {
+  const data = await binanceFuturesRequest('GET', '/fapi/v2/positionRisk', { symbol: 'BTCUSDT' }, cfg) as unknown as BinancePositionRisk[];
+  return data.filter((p) => parseFloat(p.positionAmt) !== 0);
 }
 
 // ============ MAIN ENGINE ============
-export async function runBreakoutEngine() {
+export async function runBreakoutEngine(): Promise<EngineResult> {
   const candles = await fetchCandles();
   const state = loadState();
   const cfg = loadConfig();
@@ -132,7 +151,7 @@ export async function runBreakoutEngine() {
   const now = new Date().toISOString();
 
   let action = 'HOLD';
-  let liveOrderResult = null;
+  let liveOrderResult: BinanceOrderResult | null = null;
 
   // Check open position
   if (state.position) {
@@ -156,21 +175,19 @@ export async function runBreakoutEngine() {
     }
 
     if (closed) {
-      // Execute live close
       if (live && pos.liveQty) {
         try {
-          liveOrderResult = await closePosition('BTCUSDT', pos.side, pos.liveQty, cfg);
+          liveOrderResult = await closePosition('BTCUSDT', pos.side, pos.liveQty, cfg as { binanceApiKey: string; binanceApiSecret: string });
           action = `${reason}_HIT_LIVE (${pos.side === 1 ? 'LONG' : 'SHORT'})`;
         } catch (e) {
-          action = `${reason}_HIT_LIVE_ERROR: ${e.message}`;
-          // Still update paper state
+          action = `${reason}_HIT_LIVE_ERROR: ${(e as Error).message}`;
         }
       } else {
         action = `${reason}_HIT (${pos.side === 1 ? 'LONG' : 'SHORT'})`;
       }
 
       state.balance += pnl;
-      const trade = {
+      const trade: TradeRecord = {
         side: pos.side === 1 ? 'LONG' : 'SHORT',
         entry: pos.entry,
         exit: currentPrice,
@@ -179,7 +196,7 @@ export async function runBreakoutEngine() {
         closedAt: now,
         reason,
         mode: live ? 'LIVE' : 'PAPER',
-        liveOrder: liveOrderResult || null,
+        liveOrder: liveOrderResult,
       };
       state.trades.push(trade);
       appendTrade(trade);
@@ -202,10 +219,10 @@ export async function runBreakoutEngine() {
     avgVol /= lookback;
 
     const volOk = candles[i].v >= avgVol * volMult;
-    let signal = 0;
+    let signal: 0 | 1 | -1 = 0;
 
-    if (volOk && candles[i].c > hi) signal = 1;   // LONG breakout
-    if (volOk && candles[i].c < lo) signal = -1;   // SHORT breakdown
+    if (volOk && candles[i].c > hi) signal = 1;
+    if (volOk && candles[i].c < lo) signal = -1;
 
     if (signal !== 0) {
       const size = state.balance * posSize;
@@ -213,11 +230,9 @@ export async function runBreakoutEngine() {
 
       if (live) {
         try {
-          // Set leverage first
-          await setLeverage('BTCUSDT', leverage, cfg);
-          // Calculate quantity in BTC
+          await setLeverage('BTCUSDT', leverage, cfg as { binanceApiKey: string; binanceApiSecret: string });
           const qty = (size * leverage) / currentPrice;
-          liveOrderResult = await openPosition('BTCUSDT', signal, qty, cfg);
+          liveOrderResult = await openPosition('BTCUSDT', signal, qty, cfg as { binanceApiKey: string; binanceApiSecret: string });
           state.balance -= entryFee;
           state.position = {
             side: signal,
@@ -230,7 +245,7 @@ export async function runBreakoutEngine() {
           };
           action = `OPEN_${signal === 1 ? 'LONG' : 'SHORT'}_LIVE`;
         } catch (e) {
-          action = `SIGNAL_${signal === 1 ? 'LONG' : 'SHORT'}_LIVE_ERROR: ${e.message}`;
+          action = `SIGNAL_${signal === 1 ? 'LONG' : 'SHORT'}_LIVE_ERROR: ${(e as Error).message}`;
         }
       } else {
         state.balance -= entryFee;
@@ -265,21 +280,20 @@ export async function runBreakoutEngine() {
 }
 
 // ============ UTILITY: Go live ============
-export async function goLive(apiKey, apiSecret) {
-  const cfg = loadConfig();
+export async function goLive(apiKey: string, apiSecret: string): Promise<GoLiveResult> {
+  const cfg = loadConfig() as Config;
   cfg.mode = 'live';
   cfg.binanceApiKey = apiKey;
   cfg.binanceApiSecret = apiSecret;
   fs.writeFileSync(CONFIG_FILE, JSON.stringify(cfg, null, 2));
-  
-  // Verify connection
-  const testCfg = { ...cfg, binanceApiKey: apiKey, binanceApiSecret: apiSecret };
+
+  const testCfg = { binanceApiKey: apiKey, binanceApiSecret: apiSecret };
   const balance = await getAccountBalance(testCfg);
   return { status: 'live', usdtBalance: balance };
 }
 
-export async function goPaper() {
-  const cfg = loadConfig();
+export async function goPaper(): Promise<GoPaperResult> {
+  const cfg = loadConfig() as Config;
   cfg.mode = 'paper';
   delete cfg.binanceApiKey;
   delete cfg.binanceApiSecret;
