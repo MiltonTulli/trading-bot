@@ -4,7 +4,7 @@
     "BTCUSDT"
   ],
   "timeframe": "4h",
-  "mode": "live",
+  "mode": "paper",
   "params": {
     "lookback": 10,
     "volMult": 2,

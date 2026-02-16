@@ -32,7 +32,7 @@ export function StatusBar() {
           <div className="text-right">
             <div className="text-sm text-muted-foreground">Balance</div>
             <div className="font-mono font-medium">
-              ${status?.balance.toLocaleString() || '10,000'}
+              ${Number(status?.balance || 10000).toLocaleString()}
             </div>
           </div>
           
