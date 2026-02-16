@@ -1,21 +1,8 @@
 {
   "symbol": "BTCUSDT",
   "interval": "1h",
-  "timestamp": 1771253624395,
+  "timestamp": 1771255446491,
   "candles": [
-    {
-      "openTime": "2026-01-26T19:00:00.000Z",
-      "open": 88403.73,
-      "high": 88537.95,
-      "low": 87950,
-      "close": 88013.19,
-      "volume": 515.97407,
-      "closeTime": "2026-01-26T19:59:59.999Z",
-      "quoteVolume": 45557680.8304924,
-      "trades": 170095,
-      "buyBaseVolume": 252.19312,
-      "buyQuoteVolume": 22268252.5260665
-    },
     {
       "openTime": "2026-01-26T20:00:00.000Z",
       "open": 88013.19,
@@ -6495,13 +6482,26 @@
       "open": 68395.11,
       "high": 68718.3,
       "low": 68260.39,
-      "close": 68353.81,
-      "volume": 1033.39104,
+      "close": 68427.64,
+      "volume": 1092.6004,
       "closeTime": "2026-02-16T14:59:59.999Z",
-      "quoteVolume": 70770008.9336545,
-      "trades": 405433,
-      "buyBaseVolume": 639.257,
-      "buyQuoteVolume": 43786918.2702831
+      "quoteVolume": 74818398.6495674,
+      "trades": 430913,
+      "buyBaseVolume": 674.3551,
+      "buyQuoteVolume": 46186630.5619069
+    },
+    {
+      "openTime": "2026-02-16T15:00:00.000Z",
+      "open": 68427.64,
+      "high": 68607.22,
+      "low": 68300,
+      "close": 68351.63,
+      "volume": 443.94931,
+      "closeTime": "2026-02-16T15:59:59.999Z",
+      "quoteVolume": 30404948.7053649,
+      "trades": 155712,
+      "buyBaseVolume": 324.51536,
+      "buyQuoteVolume": 22228949.0224105
     }
   ]
 }

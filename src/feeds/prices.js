@@ -8,7 +8,7 @@ import path from 'path';
 
 class PriceFeed {
     constructor(config) {
-        this.baseUrl = config.binanceBaseUrl;
+        this.baseUrl = config.binanceBaseUrl || 'https://api.binance.com';
         this.maxCandles = config.maxCandles;
         this.cacheExpiration = config.cacheExpiration; // 5 minutes
         this.dataDir = './data/candles';

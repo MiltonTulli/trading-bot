@@ -1,21 +1,8 @@
 {
   "symbol": "ETHUSDT",
   "interval": "1h",
-  "timestamp": 1771253625483,
+  "timestamp": 1771255447619,
   "candles": [
-    {
-      "openTime": "2026-01-26T19:00:00.000Z",
-      "open": 2932,
-      "high": 2936.06,
-      "low": 2918.42,
-      "close": 2923.12,
-      "volume": 12566.3805,
-      "closeTime": "2026-01-26T19:59:59.999Z",
-      "quoteVolume": 36817732.528716,
-      "trades": 186392,
-      "buyBaseVolume": 6774.9325,
-      "buyQuoteVolume": 19852104.76
-    },
     {
       "openTime": "2026-01-26T20:00:00.000Z",
       "open": 2923.11,
@@ -6495,13 +6482,26 @@
       "open": 1967.69,
       "high": 1983.45,
       "low": 1954.97,
-      "close": 1972.27,
-      "volume": 17319.1229,
+      "close": 1973.13,
+      "volume": 18232.334,
       "closeTime": "2026-02-16T14:59:59.999Z",
-      "quoteVolume": 34095585.865486,
-      "trades": 281630,
-      "buyBaseVolume": 9306.5584,
-      "buyQuoteVolume": 18324596.625847
+      "quoteVolume": 35896511.020472,
+      "trades": 292011,
+      "buyBaseVolume": 9772.128,
+      "buyQuoteVolume": 19242692.486378
+    },
+    {
+      "openTime": "2026-02-16T15:00:00.000Z",
+      "open": 1973.13,
+      "high": 1986.12,
+      "low": 1966.72,
+      "close": 1969.63,
+      "volume": 9769.437,
+      "closeTime": "2026-02-16T15:59:59.999Z",
+      "quoteVolume": 19312404.079321,
+      "trades": 155759,
+      "buyBaseVolume": 4436.0841,
+      "buyQuoteVolume": 8771173.493125
     }
   ]
 }

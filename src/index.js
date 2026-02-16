@@ -61,7 +61,9 @@ class TradingBot {
         try {
             const configData = await fs.readFile(this.configPath, 'utf8');
             this.config = JSON.parse(configData);
-            console.log(`📋 Configuration loaded: ${this.config.pairs.length} pairs, ${this.config.timeframes.length} timeframes`);
+            const timeframes = this.config.timeframes || [this.config.timeframe || '4h'];
+            this.config.timeframes = timeframes;
+            console.log(`📋 Configuration loaded: ${this.config.pairs.length} pairs, ${timeframes.length} timeframes`);
         } catch (error) {
             console.error('Failed to load configuration:', error);
             throw error;

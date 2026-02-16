@@ -49,14 +49,14 @@ Edit `config.json` to tune the strategy:
 Reproduce the 61-month backtest results:
 
 ```bash
+# Quick single-run backtest (recommended)
+npm run backtest
+
 # Monthly backtest (breakout + combined strategies, Jan 2021 → Feb 2026)
-node src/backtest-monthly.cjs
+node archive/backtest-monthly.cjs
 
 # Full multi-strategy sweep (3,240+ configs across 4 market periods)
-node src/backtest-v7b.cjs
-
-# Quick single-run backtest
-npm run backtest
+node archive/backtest-v7b.cjs
 ```
 
 > Backtest data files live in `data/backtest/`. Funding rate and Fear & Greed data are in `data/funding/` and `data/sentiment/`.
@@ -108,8 +108,8 @@ export BINANCE_API_SECRET="your-api-secret"
 | `npm run backtest` | Run quick backtest |
 | `npm run dashboard` | Launch monitoring dashboard |
 | `npm test` | Run tests |
-| `node src/backtest-monthly.cjs` | Monthly backtest (61 months) |
-| `node src/backtest-v7b.cjs` | Full multi-strategy sweep (3,240+ configs) |
+| `node archive/backtest-monthly.cjs` | Monthly backtest (61 months) |
+| `node archive/backtest-v7b.cjs` | Full multi-strategy sweep (3,240+ configs) |
 
 ---
 
@@ -545,14 +545,14 @@ Editá `config.json` para ajustar la estrategia:
 Reproducí los resultados del backtest de 61 meses:
 
 ```bash
+# Backtest rápido single-run (recomendado)
+npm run backtest
+
 # Backtest mensual (breakout + estrategias combinadas, Ene 2021 → Feb 2026)
-node src/backtest-monthly.cjs
+node archive/backtest-monthly.cjs
 
 # Barrido completo multi-estrategia (3,240+ configs en 4 períodos de mercado)
-node src/backtest-v7b.cjs
-
-# Backtest rápido single-run
-npm run backtest
+node archive/backtest-v7b.cjs
 ```
 
 > Los archivos de data del backtest están en `data/backtest/`. Funding rates y Fear & Greed en `data/funding/` y `data/sentiment/`.
@@ -604,8 +604,8 @@ export BINANCE_API_SECRET="tu-api-secret"
 | `npm run backtest` | Correr backtest rápido |
 | `npm run dashboard` | Lanzar dashboard de monitoreo |
 | `npm test` | Correr tests |
-| `node src/backtest-monthly.cjs` | Backtest mensual (61 meses) |
-| `node src/backtest-v7b.cjs` | Barrido multi-estrategia (3,240+ configs) |
+| `node archive/backtest-monthly.cjs` | Backtest mensual (61 meses) |
+| `node archive/backtest-v7b.cjs` | Barrido multi-estrategia (3,240+ configs) |
 
 ---
 
