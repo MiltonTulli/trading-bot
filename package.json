@@ -9,7 +9,8 @@
     "backtest": "bun run src/backtest.ts",
     "backtest:monthly": "bun run src/backtest.ts monthly",
     "test": "bun run src/test.ts",
-    "go-live": "bun run src/go-live.ts"
+    "go-live": "bun run src/go-live.ts",
+    "dashboard": "cd dashboard && bun run server"
   },
   "keywords": [
     "cryptocurrency",
