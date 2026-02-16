@@ -61,8 +61,11 @@ class ApiClient {
     return this.request<MonthlyReturn[]>('/api/monthly');
   }
 
-  async runBacktest(): Promise<BacktestResult> {
-    return this.request<BacktestResult>('/api/backtest');
+  async runBacktest(params?: Record<string, any>): Promise<BacktestResult> {
+    const qs = params ? '?' + new URLSearchParams(
+      Object.entries(params).map(([k, v]) => [k, String(v)])
+    ).toString() : '';
+    return this.request<BacktestResult>(`/api/backtest${qs}`);
   }
 }
 
@@ -166,11 +169,11 @@ export function useBacktest() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const runBacktest = async () => {
+  const runBacktest = async (params?: Record<string, any>) => {
     try {
       setLoading(true);
       setError(null);
-      const result = await api.runBacktest();
+      const result = await api.runBacktest(params);
       setData(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to run backtest');
