@@ -1,0 +1,282 @@
+{
+  "bull_2021": {
+    "totalTrades": 41,
+    "wins": 18,
+    "losses": 23,
+    "winRate": 43.90243902439025,
+    "totalReturn": -37.2,
+    "maxDrawdown": 73.99,
+    "profitFactor": 1.18,
+    "finalBalance": 6279.6,
+    "avgWin": 202.28,
+    "avgLoss": 133.75,
+    "trades": [
+      {
+        "entry": 55142.46,
+        "exit": 51130.19479962494,
+        "direction": "long",
+        "netPnL": -102.92,
+        "reason": "stop_loss",
+        "returnPct": -7.47
+      },
+      {
+        "entry": 50461.99,
+        "exit": 45401.58271686901,
+        "direction": "long",
+        "netPnL": -170.31,
+        "reason": "stop_loss",
+        "returnPct": -10.22
+      },
+      {
+        "entry": 49014.99,
+        "exit": 44792.26783559504,
+        "direction": "long",
+        "netPnL": -136.78,
+        "reason": "stop_loss",
+        "returnPct": -8.81
+      },
+      {
+        "entry": 45321.02,
+        "exit": 40315.07462792257,
+        "direction": "long",
+        "netPnL": -163.75,
+        "reason": "stop_loss",
+        "returnPct": -11.23
+      },
+      {
+        "entry": 40475.17,
+        "exit": 33250.58212070445,
+        "direction": "long",
+        "netPnL": -159.33,
+        "reason": "stop_loss",
+        "returnPct": -18.03
+      },
+      {
+        "entry": 38157.76,
+        "exit": 31348.076577991647,
+        "direction": "long",
+        "netPnL": -141.48,
+        "reason": "stop_loss",
+        "returnPct": -18.03
+      },
+      {
+        "entry": 38304.51,
+        "exit": 32624.178398191907,
+        "direction": "long",
+        "netPnL": -118.19,
+        "reason": "stop_loss",
+        "returnPct": -15.01
+      },
+      {
+        "entry": 37600.01,
+        "exit": 31754.759649344916,
+        "direction": "long",
+        "netPnL": -153.51,
+        "reason": "stop_loss",
+        "returnPct": -15.73
+      },
+      {
+        "entry": 37600.01,
+        "exit": 31170.234614279405,
+        "direction": "long",
+        "netPnL": -133.6,
+        "reason": "stop_loss",
+        "returnPct": -17.28
+      },
+      {
+        "entry": 34972.42,
+        "exit": 39607.084446537236,
+        "direction": "long",
+        "netPnL": 211.94,
+        "reason": "take_profit",
+        "returnPct": 13.04
+      }
+    ]
+  },
+  "bear_2022": {
+    "totalTrades": 11,
+    "wins": 6,
+    "losses": 5,
+    "winRate": 54.54545454545454,
+    "totalReturn": -16.01,
+    "maxDrawdown": 73.63,
+    "profitFactor": 1.53,
+    "finalBalance": 8399.47,
+    "avgWin": 200.97,
+    "avgLoss": 157.87,
+    "trades": [
+      {
+        "entry": 38745.01,
+        "exit": 42989.6985581187,
+        "direction": "long",
+        "netPnL": 215.2,
+        "reason": "take_profit",
+        "returnPct": 10.74
+      },
+      {
+        "entry": 38745.01,
+        "exit": 43414.16741393056,
+        "direction": "long",
+        "netPnL": 156.53,
+        "reason": "take_profit",
+        "returnPct": 11.84
+      },
+      {
+        "entry": 44324.65,
+        "exit": 41159.40600850881,
+        "direction": "long",
+        "netPnL": -113.01,
+        "reason": "stop_loss",
+        "returnPct": -7.33
+      },
+      {
+        "entry": 43609.96,
+        "exit": 40654.21171699089,
+        "direction": "long",
+        "netPnL": -219.4,
+        "reason": "stop_loss",
+        "returnPct": -6.97
+      },
+      {
+        "entry": 38695.87,
+        "exit": 42847.01530488133,
+        "direction": "long",
+        "netPnL": 171.76,
+        "reason": "take_profit",
+        "returnPct": 10.52
+      },
+      {
+        "entry": 38764.88,
+        "exit": 42843.41612518783,
+        "direction": "long",
+        "netPnL": 123.68,
+        "reason": "take_profit",
+        "returnPct": 10.31
+      },
+      {
+        "entry": 39782.13,
+        "exit": 43789.63192339822,
+        "direction": "long",
+        "netPnL": 244.3,
+        "reason": "take_profit",
+        "returnPct": 9.86
+      },
+      {
+        "entry": 29721.65,
+        "exit": 26905.906639314195,
+        "direction": "long",
+        "netPnL": -125.59,
+        "reason": "stop_loss",
+        "returnPct": -9.66
+      },
+      {
+        "entry": 30582.54,
+        "exit": 26707.738020060697,
+        "direction": "long",
+        "netPnL": -179.75,
+        "reason": "stop_loss",
+        "returnPct": -12.86
+      },
+      {
+        "entry": 30084.11,
+        "exit": 26638.861186379465,
+        "direction": "long",
+        "netPnL": -151.62,
+        "reason": "stop_loss",
+        "returnPct": -11.64
+      }
+    ]
+  },
+  "recovery_2023": {
+    "totalTrades": 6,
+    "wins": 6,
+    "losses": 0,
+    "winRate": 100,
+    "totalReturn": 13.02,
+    "maxDrawdown": 60.75,
+    "profitFactor": 99,
+    "finalBalance": 11301.87,
+    "avgWin": 216.98,
+    "avgLoss": 0,
+    "trades": [
+      {
+        "entry": 24374.2,
+        "exit": 26855.36664322926,
+        "direction": "long",
+        "netPnL": 293.81,
+        "reason": "take_profit",
+        "returnPct": 9.97
+      },
+      {
+        "entry": 25054.15,
+        "exit": 27998.249923558622,
+        "direction": "long",
+        "netPnL": 207.77,
+        "reason": "take_profit",
+        "returnPct": 11.54
+      },
+      {
+        "entry": 25054.15,
+        "exit": 28292.659915914486,
+        "direction": "long",
+        "netPnL": 154.97,
+        "reason": "take_profit",
+        "returnPct": 12.71
+      },
+      {
+        "entry": 26918.73,
+        "exit": 29799.515658222124,
+        "direction": "long",
+        "netPnL": 213.93,
+        "reason": "take_profit",
+        "returnPct": 10.49
+      },
+      {
+        "entry": 27269.17,
+        "exit": 30033.282816686038,
+        "direction": "long",
+        "netPnL": 253.16,
+        "reason": "take_profit",
+        "returnPct": 9.93
+      },
+      {
+        "entry": 27785.1,
+        "exit": 30591.8765738851,
+        "direction": "long",
+        "netPnL": 178.22,
+        "reason": "take_profit",
+        "returnPct": 9.89
+      }
+    ]
+  },
+  "recent_6m": {
+    "totalTrades": 3,
+    "wins": 0,
+    "losses": 3,
+    "winRate": 0,
+    "totalReturn": -3.64,
+    "maxDrawdown": 67.44,
+    "profitFactor": 0,
+    "finalBalance": 9636.4,
+    "avgWin": 0,
+    "avgLoss": 121.2,
+    "trades": [
+      {
+        "entry": 71188.99,
+        "exit": 66309.88522401926,
+        "direction": "long",
+        "netPnL": -205.64,
+        "reason": "stop_loss",
+        "returnPct": -7.05
+      },
+      {
+        "entry": 70138,
+        "exit": 65166.74202396557,
+        "direction": "long",
+        "netPnL": -145.49,
+        "reason": "stop_loss",
+        "returnPct": -7.28
+      }
+    ]
+  }
+}

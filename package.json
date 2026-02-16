@@ -1,0 +1,28 @@
+{
+  "name": "crypto-trading-bot",
+  "version": "2.0.0",
+  "description": "Advanced cryptocurrency trading bot with technical analysis and paper trading",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dashboard": "node src/dashboard.js",
+    "backtest": "node src/backtest.js",
+    "test": "node src/test.js"
+  },
+  "keywords": [
+    "cryptocurrency",
+    "trading",
+    "technical-analysis",
+    "binance",
+    "bot"
+  ],
+  "author": "Trading Bot System",
+  "license": "MIT",
+  "dependencies": {
+    "technicalindicators": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

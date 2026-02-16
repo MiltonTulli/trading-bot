@@ -1,0 +1,7 @@
+{
+  "strategy": "breakout_v1",
+  "pairs": ["BTCUSDT"],
+  "timeframe": "4h",
+  "params": { "lookback": 10, "volMult": 2, "sl": 0.03, "tp": 0.06, "posSize": 0.2, "leverage": 5 },
+  "paperBalance": 10000
+}
