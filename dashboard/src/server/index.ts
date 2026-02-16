@@ -11,17 +11,26 @@ const app = new Hono()
 // Enable CORS
 app.use('*', cors())
 
-// API routes
+// API routes - MUST be before static file routes!
 app.route('/api/bot', botRoutes)
 app.route('/api/trades', tradesRoutes) 
-app.route('/api', backtestRoutes)
 app.route('/api/candles', candlesRoutes)
+app.route('/api', backtestRoutes)
+
+// Add status endpoint at top level
+app.get('/api/status', (c) => {
+  return c.json({ 
+    status: 'running',
+    message: 'Trading Bot Dashboard API',
+    timestamp: new Date().toISOString()
+  })
+})
 
 // Serve static files from the built React app
 app.get('/assets/*', serveStatic({ root: './dist' }))
 app.get('/favicon.ico', serveStatic({ root: './dist' }))
 
-// Serve the main HTML file for all routes (SPA routing)
+// Serve the main HTML file for all routes (SPA routing) - MUST be last!
 app.get('*', serveStatic({ path: './dist/index.html' }))
 
 const port = process.env.PORT || 3000

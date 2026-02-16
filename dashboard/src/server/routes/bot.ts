@@ -4,9 +4,9 @@ import { join } from 'path'
 
 const bot = new Hono()
 
-const DATA_DIR = join(process.cwd(), 'data')
+const DATA_DIR = join(process.cwd(), '..', 'data')  // Parent directory's data folder
 const STATE_FILE = join(DATA_DIR, 'state.json')
-const CONFIG_FILE = join(process.cwd(), 'config.json')
+const CONFIG_FILE = join(process.cwd(), '..', 'config.json')  // Parent directory's config
 
 // Helper function to read JSON file
 function readJSONFile(filePath: string) {
@@ -71,9 +71,16 @@ bot.get('/status', (c) => {
 
 // Start bot
 bot.post('/start', async (c) => {
-  const body = await c.req.json()
-  const mode = body.mode || 'paper'
-  const params = body.params || {}
+  let body = {}
+  try {
+    body = await c.req.json()
+  } catch (error) {
+    // Handle empty body or invalid JSON gracefully
+    console.log('No JSON body provided, using defaults')
+    body = {}
+  }
+  const mode = (body as any).mode || 'paper'
+  const params = (body as any).params || {}
   
   const config = readJSONFile(CONFIG_FILE) || {}
   config.mode = mode

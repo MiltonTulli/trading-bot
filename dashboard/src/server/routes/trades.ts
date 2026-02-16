@@ -4,7 +4,7 @@ import { join } from 'path'
 
 const trades = new Hono()
 
-const DATA_DIR = join(process.cwd(), 'data')
+const DATA_DIR = join(process.cwd(), '..', 'data')  // Parent directory's data folder
 const STATE_FILE = join(DATA_DIR, 'state.json')
 const BREAKOUT_TRADES_FILE = join(DATA_DIR, 'breakout-trades.json')
 

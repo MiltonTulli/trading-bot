@@ -4,7 +4,7 @@ import { join } from 'path'
 
 const candles = new Hono()
 
-const DATA_DIR = join(process.cwd(), 'data')
+const DATA_DIR = join(process.cwd(), '..', 'data')  // Parent directory's data folder
 const BACKTEST_DIR = join(DATA_DIR, 'backtest')
 const BACKTEST_DATA_FILE = join(BACKTEST_DIR, 'BTCUSDT_4h_full.json')
 
