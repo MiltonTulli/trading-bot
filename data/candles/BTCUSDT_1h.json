@@ -1,7 +1,7 @@
 {
   "symbol": "BTCUSDT",
   "interval": "1h",
-  "timestamp": 1771253319387,
+  "timestamp": 1771253624395,
   "candles": [
     {
       "openTime": "2026-01-26T19:00:00.000Z",
@@ -6493,15 +6493,15 @@
     {
       "openTime": "2026-02-16T14:00:00.000Z",
       "open": 68395.11,
-      "high": 68647.33,
+      "high": 68718.3,
       "low": 68260.39,
-      "close": 68572.16,
-      "volume": 953.68686,
+      "close": 68353.81,
+      "volume": 1033.39104,
       "closeTime": "2026-02-16T14:59:59.999Z",
-      "quoteVolume": 65305417.5870815,
-      "trades": 368938,
-      "buyBaseVolume": 597.47536,
-      "buyQuoteVolume": 40921781.1610779
+      "quoteVolume": 70770008.9336545,
+      "trades": 405433,
+      "buyBaseVolume": 639.257,
+      "buyQuoteVolume": 43786918.2702831
     }
   ]
 }
