@@ -73,17 +73,35 @@ bot.get('/status', (c) => {
 bot.post('/start', async (c) => {
   const body = await c.req.json()
   const mode = body.mode || 'paper'
+  const params = body.params || {}
   
   const config = readJSONFile(CONFIG_FILE) || {}
   config.mode = mode
+  
+  // Update strategy parameters if provided
+  if (params) {
+    if (!config.params) config.params = {}
+    
+    // Map UI parameters to config structure
+    if (params.stopLoss) config.params.sl = params.stopLoss / 100
+    if (params.takeProfit) config.params.tp = params.takeProfit / 100
+    if (params.positionSize) config.params.posSize = params.positionSize / 100
+    if (params.leverage) config.params.leverage = params.leverage
+    if (params.lookback) config.params.lookback = params.lookback
+    if (params.volMultiplier) config.params.volMult = params.volMultiplier
+    
+    // Update other settings
+    if (params.symbol) config.pairs = [params.symbol]
+    if (params.timeframe) config.timeframe = params.timeframe
+  }
   
   if (!writeJSONFile(CONFIG_FILE, config)) {
     return c.json({ error: 'Failed to update config' }, 500)
   }
 
-  console.log(`🤖 Bot started in ${mode} mode`)
+  console.log(`🤖 Bot started in ${mode} mode with parameters:`, params)
   
-  return c.json({ success: true, mode })
+  return c.json({ success: true, mode, params })
 })
 
 // Stop bot

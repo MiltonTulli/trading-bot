@@ -1,12 +1,7 @@
-import { Dashboard } from './components/Dashboard'
-import { Layout } from './components/Layout'
+import { SimpleDashboard } from './components/SimpleDashboard'
 
 function App() {
-  return (
-    <Layout>
-      <Dashboard />
-    </Layout>
-  )
+  return <SimpleDashboard />
 }
 
 export default App

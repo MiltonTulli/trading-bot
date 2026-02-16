@@ -24,10 +24,10 @@ class ApiClient {
     return this.request<BotStatus>('/api/status');
   }
 
-  async startBot(mode: 'paper' | 'live' = 'paper'): Promise<void> {
+  async startBot(mode: 'paper' | 'live' = 'paper', params?: any): Promise<void> {
     return this.request<void>('/api/bot/start', {
       method: 'POST',
-      body: JSON.stringify({ mode }),
+      body: JSON.stringify({ mode, params }),
     });
   }
 
@@ -134,11 +134,11 @@ export function useBotControls() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const startBot = async (mode: 'paper' | 'live' = 'paper') => {
+  const startBot = async (mode: 'paper' | 'live' = 'paper', params?: any) => {
     try {
       setLoading(true);
       setError(null);
-      await api.startBot(mode);
+      await api.startBot(mode, params);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to start bot');
     } finally {
