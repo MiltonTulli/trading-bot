@@ -1,12 +1,4 @@
 node_modules/
-bot.log
-data/state.json
-data/state/
-data/trades.json
+*.log
 data/breakout-state.json
 data/breakout-trades.json
-data/performance.json
-data/news_analysis.json
-data/diagnostic-signals-v3.json
-data/analysis_*.json
-*.log

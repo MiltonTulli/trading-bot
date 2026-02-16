@@ -57,10 +57,11 @@ test('breakout-state.json exists', () => {
     assert(state.stats, 'stats should exist');
 });
 
-// No old strategy files in src/
-test('old strategies removed from src/', () => {
+// No old cruft in src/
+test('no old strategy files in src/', () => {
     assert(!fs.existsSync(path.join(__dirname, 'signals')), 'src/signals/ should not exist');
     assert(!fs.existsSync(path.join(__dirname, 'strategies')), 'src/strategies/ should not exist');
+    assert(!fs.existsSync(path.join(__dirname, 'paper')), 'src/paper/ should not exist');
 });
 
 // Binance API reachable
