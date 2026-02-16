@@ -7,6 +7,112 @@ Automated bot that trades BTC/USDT on perpetual futures with a breakout + volume
 
 ---
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** >= 16.0.0 ([download](https://nodejs.org/))
+- **Git** (to clone the repo)
+- A **Binance** account with Futures enabled (only for live trading)
+
+### Installation
+
+```bash
+git clone https://github.com/MiltonTulli/trading-bot.git
+cd trading-bot
+npm install
+```
+
+### Configuration
+
+Edit `config.json` to tune the strategy:
+
+```json
+{
+  "strategy": "breakout_v1",
+  "pairs": ["BTCUSDT"],
+  "timeframe": "4h",
+  "params": {
+    "lookback": 10,      // Number of candles for breakout range
+    "volMult": 2,        // Volume must be Nx the average to trigger
+    "sl": 0.03,          // Stop Loss: 3%
+    "tp": 0.06,          // Take Profit: 6%
+    "posSize": 0.2,      // Position size: 20% of balance
+    "leverage": 5         // Leverage multiplier
+  },
+  "paperBalance": 10000   // Starting balance for paper trading
+}
+```
+
+### Running Backtests
+
+Reproduce the 61-month backtest results:
+
+```bash
+# Monthly backtest (breakout + combined strategies, Jan 2021 → Feb 2026)
+node src/backtest-monthly.cjs
+
+# Full multi-strategy sweep (3,240+ configs across 4 market periods)
+node src/backtest-v7b.cjs
+
+# Quick single-run backtest
+npm run backtest
+```
+
+> Backtest data files live in `data/backtest/`. Funding rate and Fear & Greed data are in `data/funding/` and `data/sentiment/`.
+
+### Paper Trading
+
+Start the bot in paper trading mode (no real money, no API keys needed):
+
+```bash
+npm start
+# or
+node src/index.js
+```
+
+The bot will:
+1. Fetch live market data from Binance's public API
+2. Run the breakout strategy every 5 minutes (checks 4h candle closes)
+3. Execute virtual trades and track P&L in `data/state.json`
+
+Other commands:
+
+```bash
+node src/index.js test      # Test initialization & connectivity
+node src/index.js report    # Generate performance report
+node src/index.js reset     # Reset paper portfolio to $10K
+node src/index.js clean     # Clean old log files
+npm run dashboard           # Launch the dashboard
+```
+
+### Going Live (Binance Futures)
+
+1. Create API keys on [Binance](https://www.binance.com/) with **Futures trading** permissions
+2. Set environment variables:
+
+```bash
+export BINANCE_API_KEY="your-api-key"
+export BINANCE_API_SECRET="your-api-secret"
+```
+
+3. Run the bot — it will detect the API keys and switch to live execution
+
+> ⚠️ **Start with small amounts.** Backtesting ≠ future results. Read the [Risks and Disclaimers](#️-risks-and-disclaimers) section carefully.
+
+### Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start the trading bot (paper or live) |
+| `npm run backtest` | Run quick backtest |
+| `npm run dashboard` | Launch monitoring dashboard |
+| `npm test` | Run tests |
+| `node src/backtest-monthly.cjs` | Monthly backtest (61 months) |
+| `node src/backtest-v7b.cjs` | Full multi-strategy sweep (3,240+ configs) |
+
+---
+
 ## 📊 Strategy: Breakout + Volume Filter
 
 ### Logic
@@ -394,6 +500,112 @@ The development process followed a simplified **walk-forward optimization** meth
 
 ## TL;DR
 Bot automático que opera BTC/USDT en futuros perpetuos con una estrategia de breakout + volumen. Backtested en 61 meses (Ene 2021 → Feb 2026), promedio **+6.2% mensual** con **66% de meses positivos**. $10K se convirtieron en $229K compuesto en 5 años.
+
+---
+
+## 🚀 Cómo Empezar
+
+### Requisitos
+
+- **Node.js** >= 16.0.0 ([descargar](https://nodejs.org/))
+- **Git** (para clonar el repo)
+- Una cuenta de **Binance** con Futuros habilitados (solo para trading real)
+
+### Instalación
+
+```bash
+git clone https://github.com/MiltonTulli/trading-bot.git
+cd trading-bot
+npm install
+```
+
+### Configuración
+
+Editá `config.json` para ajustar la estrategia:
+
+```json
+{
+  "strategy": "breakout_v1",
+  "pairs": ["BTCUSDT"],
+  "timeframe": "4h",
+  "params": {
+    "lookback": 10,      // Cantidad de velas para el rango de breakout
+    "volMult": 2,        // El volumen debe ser Nx el promedio para activar señal
+    "sl": 0.03,          // Stop Loss: 3%
+    "tp": 0.06,          // Take Profit: 6%
+    "posSize": 0.2,      // Tamaño de posición: 20% del balance
+    "leverage": 5         // Multiplicador de apalancamiento
+  },
+  "paperBalance": 10000   // Balance inicial para paper trading
+}
+```
+
+### Correr Backtests
+
+Reproducí los resultados del backtest de 61 meses:
+
+```bash
+# Backtest mensual (breakout + estrategias combinadas, Ene 2021 → Feb 2026)
+node src/backtest-monthly.cjs
+
+# Barrido completo multi-estrategia (3,240+ configs en 4 períodos de mercado)
+node src/backtest-v7b.cjs
+
+# Backtest rápido single-run
+npm run backtest
+```
+
+> Los archivos de data del backtest están en `data/backtest/`. Funding rates y Fear & Greed en `data/funding/` y `data/sentiment/`.
+
+### Paper Trading
+
+Iniciá el bot en modo paper trading (sin plata real, no necesitás API keys):
+
+```bash
+npm start
+# o
+node src/index.js
+```
+
+El bot va a:
+1. Obtener datos de mercado en vivo de la API pública de Binance
+2. Ejecutar la estrategia de breakout cada 5 minutos (chequea cierres de velas de 4h)
+3. Ejecutar trades virtuales y trackear P&L en `data/state.json`
+
+Otros comandos:
+
+```bash
+node src/index.js test      # Testear inicialización y conectividad
+node src/index.js report    # Generar reporte de performance
+node src/index.js reset     # Resetear portfolio a $10K
+node src/index.js clean     # Limpiar logs viejos
+npm run dashboard           # Lanzar el dashboard
+```
+
+### Ir a Producción (Binance Futures)
+
+1. Creá API keys en [Binance](https://www.binance.com/) con permisos de **Futures trading**
+2. Seteá las variables de entorno:
+
+```bash
+export BINANCE_API_KEY="tu-api-key"
+export BINANCE_API_SECRET="tu-api-secret"
+```
+
+3. Corré el bot — va a detectar las API keys y pasar a ejecución real
+
+> ⚠️ **Empezá con montos chicos.** Backtesting ≠ resultados futuros. Leé la sección de [Riesgos y Disclaimers](#️-riesgos-y-disclaimers) con cuidado.
+
+### Scripts Disponibles
+
+| Comando | Descripción |
+|---------|-------------|
+| `npm start` | Iniciar el bot (paper o live) |
+| `npm run backtest` | Correr backtest rápido |
+| `npm run dashboard` | Lanzar dashboard de monitoreo |
+| `npm test` | Correr tests |
+| `node src/backtest-monthly.cjs` | Backtest mensual (61 meses) |
+| `node src/backtest-v7b.cjs` | Barrido multi-estrategia (3,240+ configs) |
 
 ---
 
