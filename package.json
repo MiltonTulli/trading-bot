@@ -6,10 +6,10 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dashboard": "node src/dashboard.js",
     "backtest": "node src/backtest.js",
     "backtest:monthly": "node src/backtest.js monthly",
-    "test": "node src/test.js"
+    "test": "node src/test.js",
+    "go-live": "node src/go-live.js"
   },
   "keywords": [
     "cryptocurrency",
