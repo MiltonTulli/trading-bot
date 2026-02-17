@@ -50,28 +50,34 @@ export default function ConfigPanel({ onRun, loading }: Props) {
         <label className="text-xs text-muted-foreground">Date Range</label>
         <div className="grid grid-cols-2 gap-2">
           <DatePicker
-            selected={new Date(params.startDate)}
+            selected={new Date(params.startDate + 'T12:00:00')}
             onChange={(date: Date | null) => date && setParams(p => ({ ...p, startDate: date.toISOString().slice(0, 10) }))}
             dateFormat="yyyy-MM-dd"
-            minDate={new Date('2021-01-01')}
-            maxDate={new Date(params.endDate)}
+            minDate={new Date('2021-01-01T12:00:00')}
+            maxDate={new Date(params.endDate + 'T12:00:00')}
             showMonthDropdown
             showYearDropdown
+            scrollableYearDropdown
+            yearDropdownItemNumber={10}
             dropdownMode="select"
             className="input text-xs w-full"
             calendarClassName="dark-datepicker"
+            placeholderText="Start date"
           />
           <DatePicker
-            selected={new Date(params.endDate)}
+            selected={new Date(params.endDate + 'T12:00:00')}
             onChange={(date: Date | null) => date && setParams(p => ({ ...p, endDate: date.toISOString().slice(0, 10) }))}
             dateFormat="yyyy-MM-dd"
-            minDate={new Date(params.startDate)}
-            maxDate={new Date('2026-02-28')}
+            minDate={new Date(params.startDate + 'T12:00:00')}
+            maxDate={new Date('2026-02-28T12:00:00')}
             showMonthDropdown
             showYearDropdown
+            scrollableYearDropdown
+            yearDropdownItemNumber={10}
             dropdownMode="select"
             className="input text-xs w-full"
             calendarClassName="dark-datepicker"
+            placeholderText="End date"
           />
         </div>
       </div>
