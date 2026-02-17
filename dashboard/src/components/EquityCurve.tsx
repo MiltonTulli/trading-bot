@@ -1,136 +1,51 @@
-import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, ComposedChart } from 'recharts'
-import { TrendingUp } from 'lucide-react'
-import { useEquity } from '../hooks/useApi'
+import { useEffect, useRef } from 'react'
+import { createChart, type IChartApi } from 'lightweight-charts'
+import type { EquityPoint } from '../types'
 
-export function EquityCurve() {
-  const { data: equityData, loading } = useEquity()
+interface Props {
+  data: EquityPoint[]
+}
 
-  if (loading) {
-    return (
-      <div className="card">
-        <div className="card-header">
-          <h3 className="text-lg font-semibold">Equity Curve</h3>
-        </div>
-        <div className="card-content">
-          <div className="h-80 flex items-center justify-center">
-            <div className="text-muted-foreground">Loading...</div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+export default function EquityCurve({ data }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const chartRef = useRef<IChartApi | null>(null)
 
-  if (!equityData || equityData.length === 0) {
-    return (
-      <div className="card">
-        <div className="card-header">
-          <h3 className="text-lg font-semibold">Equity Curve</h3>
-        </div>
-        <div className="card-content">
-          <div className="h-80 flex items-center justify-center">
-            <div className="text-muted-foreground">No equity data available</div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  useEffect(() => {
+    if (!containerRef.current || data.length === 0) return
 
-  // Transform data for chart
-  const chartData = equityData.map(point => ({
-    time: new Date(point.time).toLocaleDateString(),
-    timestamp: new Date(point.time).getTime(),
-    equity: point.equity,
-    drawdown: Math.abs(point.drawdown), // Make positive for display
-  }))
+    if (chartRef.current) chartRef.current.remove()
 
-  const currentEquity = Number(equityData[equityData.length - 1]?.equity || 0)
-  const initialEquity = Number(equityData[0]?.equity || 10000)
-  const totalReturn = initialEquity > 0 ? ((currentEquity - initialEquity) / initialEquity) * 100 : 0
-  const maxDrawdown = equityData.length > 0 ? Math.max(...equityData.map(p => Math.abs(Number(p.drawdown || 0)))) : 0
+    const chart = createChart(containerRef.current, {
+      width: containerRef.current.clientWidth,
+      height: 300,
+      layout: { background: { color: 'transparent' }, textColor: '#a1a1aa', fontSize: 11 },
+      grid: { vertLines: { color: '#1a1a2e' }, horzLines: { color: '#1a1a2e' } },
+      timeScale: { timeVisible: false },
+      rightPriceScale: { borderColor: '#1a1a2e' },
+    })
+    chartRef.current = chart
 
-  return (
-    <div className="card">
-      <div className="card-header">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold flex items-center">
-            <TrendingUp className="h-5 w-5 mr-2 text-primary" />
-            Equity Curve
-          </h3>
-          <div className="text-right text-sm">
-            <div className={`font-mono ${totalReturn >= 0 ? 'text-success' : 'text-destructive'}`}>
-              {totalReturn >= 0 ? '+' : ''}{(totalReturn || 0).toFixed(2)}%
-            </div>
-            <div className="text-muted-foreground">
-              Max DD: -{(maxDrawdown || 0).toFixed(2)}%
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="card-content">
-        <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1a1a2e" />
-              <XAxis 
-                dataKey="time" 
-                stroke="#666666"
-                fontSize={12}
-              />
-              <YAxis 
-                stroke="#666666"
-                fontSize={12}
-                domain={['dataMin - 100', 'dataMax + 100']}
-              />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#12121a', 
-                  border: '1px solid #1a1a2e',
-                  borderRadius: '8px',
-                  color: '#ffffff'
-                }}
-                labelStyle={{ color: '#a1a1aa' }}
-                formatter={(value: any, name: string) => [
-                  name === 'equity' ? `$${Number(value || 0).toLocaleString()}` : `${Number(value || 0).toFixed(2)}%`,
-                  name === 'equity' ? 'Equity' : 'Drawdown'
-                ]}
-              />
-              
-              {/* Drawdown area (negative space) */}
-              <Area
-                dataKey="drawdown"
-                type="monotone"
-                stroke="#ef4444"
-                fill="#ef444440"
-                fillOpacity={0.3}
-                strokeWidth={1}
-                yAxisId="right"
-              />
-              
-              {/* Equity line */}
-              <Line
-                type="monotone"
-                dataKey="equity"
-                stroke="#22c55e"
-                strokeWidth={2.5}
-                dot={false}
-                activeDot={{ r: 4, fill: '#22c55e' }}
-              />
-            </ComposedChart>
-          </ResponsiveContainer>
-        </div>
-        
-        {/* Summary stats */}
-        <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-border/20 text-sm">
-          <div>
-            <div className="text-muted-foreground">Current Equity</div>
-            <div className="font-mono font-medium">${(currentEquity || 0).toLocaleString()}</div>
-          </div>
-          <div>
-            <div className="text-muted-foreground">Initial Balance</div>
-            <div className="font-mono font-medium">${(initialEquity || 0).toLocaleString()}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+    const series = chart.addAreaSeries({
+      lineColor: '#3b82f6',
+      topColor: 'rgba(59,130,246,0.3)',
+      bottomColor: 'rgba(59,130,246,0.02)',
+      lineWidth: 2,
+    })
+
+    series.setData(data.map(d => ({
+      time: d.time.slice(0, 10) as string,
+      value: d.balance,
+    })))
+
+    chart.timeScale().fitContent()
+
+    const ro = new ResizeObserver(() => {
+      if (containerRef.current) chart.applyOptions({ width: containerRef.current.clientWidth })
+    })
+    ro.observe(containerRef.current)
+
+    return () => { ro.disconnect(); chart.remove() }
+  }, [data])
+
+  return <div ref={containerRef} />
 }

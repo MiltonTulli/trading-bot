@@ -1,89 +1,58 @@
-// Trading Bot Dashboard Types
-
-export interface BotStatus {
-  status: 'running' | 'stopped' | 'paper';
-  balance: number;
-  equity: number;
-  currentPosition?: Position;
-  lastUpdated: string;
-}
-
-export interface Position {
-  id: string;
-  symbol: string;
-  direction: 'long' | 'short';
-  entryPrice: number;
-  quantity: number;
-  unrealizedPnL: number;
-  entryTime: string;
+export interface SimulationParams {
+  startDate: string
+  endDate: string
+  lookback: number
+  volMult: number
+  sl: number
+  tp: number
+  posSize: number
+  leverage: number
+  initialBalance: number
+  fee: number
 }
 
 export interface Trade {
-  id: string;
-  symbol: string;
-  direction: 'LONG' | 'SHORT';
-  entryPrice: number;
-  exitPrice: number;
-  quantity: number;
-  entryTime: string;
-  exitTime: string;
-  grossPnL: number;
-  netPnL: number;
-  returnPercent: number;
-  exitReason: string;
-  duration: number; // in hours
-}
-
-export interface Stats {
-  totalPnL: number;
-  totalPnLPercent: number;
-  winRate: number;
-  totalTrades: number;
-  currentMonthReturn: number;
-  sharpeRatio: number;
-  maxDrawdown: number;
-  winningTrades: number;
-  losingTrades: number;
-  avgWin: number;
-  avgLoss: number;
-  profitFactor: number;
-}
-
-export interface CandleData {
-  time: number;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
+  id: number
+  side: 'LONG' | 'SHORT'
+  entryPrice: number
+  exitPrice: number
+  entryTime: string
+  exitTime: string
+  pnl: number
+  pnlPct: number
+  reason: 'SL' | 'TP'
+  duration: string
 }
 
 export interface EquityPoint {
-  time: string;
-  equity: number;
-  drawdown: number;
+  time: string
+  balance: number
 }
 
 export interface MonthlyReturn {
-  month: string;
-  year: number;
-  return: number;
+  year: number
+  month: number
+  returnPct: number
+  trades: number
 }
 
-export interface BacktestResult {
-  equity: EquityPoint[];
-  trades: Trade[];
-  stats: Stats;
-  period: {
-    start: string;
-    end: string;
-  };
+export interface SimulationStats {
+  totalReturn: number
+  winRate: number
+  totalTrades: number
+  profitFactor: number
+  maxDrawdown: number
+  sharpeRatio: number
+  avgWin: number
+  avgLoss: number
+  bestMonth: number
+  worstMonth: number
 }
 
-export interface TradeMarker {
-  time: number;
-  position: 'aboveBar' | 'belowBar';
-  color: string;
-  shape: 'arrowUp' | 'arrowDown';
-  text: string;
+export interface SimulationResult {
+  stats: SimulationStats
+  trades: Trade[]
+  equity: EquityPoint[]
+  monthlyReturns: MonthlyReturn[]
+  candles: number[][] // [timestamp, o, h, l, c, v]
 }
