@@ -1,0 +1,4 @@
+node_modules/
+*.log
+data/breakout-state.json
+data/breakout-trades.json
